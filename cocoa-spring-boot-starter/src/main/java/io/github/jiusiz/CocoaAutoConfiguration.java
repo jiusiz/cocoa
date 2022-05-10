@@ -1,11 +1,11 @@
 package io.github.jiusiz;
 
 import io.github.jiusiz.core.BotContainer;
-import io.github.jiusiz.core.supports.SingleBotContainer;
+import io.github.jiusiz.core.EventDispatcher;
+import io.github.jiusiz.core.context.SingleBotContainer;
 import io.github.jiusiz.properties.BotProperties;
 import net.mamoe.mirai.BotFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties({BotProperties.class})
-
 public class CocoaAutoConfiguration {
 
     private final BotProperties botProperties;
@@ -36,6 +35,12 @@ public class CocoaAutoConfiguration {
         botProperties.getQq().forEach(qq ->
                 SingleBotContainer.addBot(BotFactory.INSTANCE.newBot(qq.getAccount(), qq.getPassword())));
         return singleBotContainer;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public EventDispatcher eventDispatcher() {
+        return new EventDispatcher();
     }
 
 }

@@ -1,4 +1,4 @@
-package io.github.jiusiz.core.supports;
+package io.github.jiusiz.core.context;
 
 import io.github.jiusiz.core.BotContainer;
 import net.mamoe.mirai.Bot;

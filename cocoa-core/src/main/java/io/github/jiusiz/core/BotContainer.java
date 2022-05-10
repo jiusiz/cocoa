@@ -25,5 +25,4 @@ public interface BotContainer {
      */
     List<Bot> getBots();
 
-
 }

@@ -1,0 +1,18 @@
+package io.github.jiusiz.core.method;
+
+import java.lang.reflect.Method;
+
+/**
+ * @author jiusiz
+ * @version 0.1.0
+ * @since 2022-05-09 下午 9:33
+ */
+public class HandlerMethod {
+    private Object targetHandler;
+    private Method targetMethod;
+
+    public HandlerMethod(Object bean, Method method){
+        this.targetHandler = bean;
+        this.targetMethod = method;
+    }
+}
