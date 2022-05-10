@@ -12,13 +12,16 @@ plugins {
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
+    api("net.mamoe:mirai-core:2.10.2")
+
     implementation(kotlin("stdlib"))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    api("net.mamoe:mirai-core:2.10.1")
 }
 
 tasks.withType<JavaCompile> {
