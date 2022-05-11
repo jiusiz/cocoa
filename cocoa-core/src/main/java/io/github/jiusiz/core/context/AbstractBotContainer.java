@@ -13,18 +13,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2022-04-19 下午 10:44
  */
 public abstract class AbstractBotContainer implements BotContainer {
-    private ConcurrentHashMap<Long, Bot> singleBots;
+    private static final ConcurrentHashMap<Long, Bot> bots = new ConcurrentHashMap<>();
 
     @Override
     public Bot getBot(Long id) {
-        return singleBots.get(id);
+        return bots.get(id);
     }
 
     @Override
     public List<Bot> getBots() {
-        ArrayList<Bot> bots = new ArrayList<>();
-        singleBots.forEach((k, v) -> bots.add(v));
-        return bots;
+        ArrayList<Bot> botList = new ArrayList<>();
+        bots.forEach((k, v) -> botList.add(v));
+        return botList;
+    }
+
+    public static void addBot(Bot bot) {
+        bots.put(bot.getId(), bot);
     }
 
 }

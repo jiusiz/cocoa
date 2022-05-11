@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface EventHandler {
+public @interface EventController {
 
     @AliasFor("botId")
     long value() default 0;

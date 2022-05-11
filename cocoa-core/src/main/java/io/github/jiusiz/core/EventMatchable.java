@@ -8,5 +8,5 @@ package io.github.jiusiz.core;
  * @since 2022-05-09 下午 8:02
  */
 public interface EventMatchable {
-    boolean match(MessageEventInfo matchInfo);
+    boolean match(MessageEventMappingInfo matchInfo);
 }

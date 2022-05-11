@@ -1,7 +1,8 @@
 package io.github.jiusiz.core.handler;
 
-import io.github.jiusiz.core.MessageEventInfo;
-import io.github.jiusiz.core.annotation.EventHandler;
+import io.github.jiusiz.core.MessageEventMappingInfo;
+import io.github.jiusiz.core.annotation.EventController;
+import io.github.jiusiz.core.annotation.method.EventMapping;
 import io.github.jiusiz.core.method.HandlerMethod;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -23,23 +24,35 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     @Override
     protected boolean isHandler(Class<?> type) {
-        return AnnotatedElementUtils.hasAnnotation(type, EventHandler.class);
+        return AnnotatedElementUtils.hasAnnotation(type, EventController.class);
     }
 
     @Override
     protected boolean isHandlerMethod(Method method) {
-        // TODO 添加新的注解
-        return AnnotatedElementUtils.hasAnnotation(method, EventHandler.class);
+        return AnnotatedElementUtils.hasAnnotation(method, EventMapping.class);
     }
 
     @Override
-    protected MessageEventInfo createMessageEventInfo(Method method, Class<?> beanType) {
-        // TODO: 2022-5-10 更换新的方法注释
-        AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(method, EventHandler.class);
-        if (attributes != null && !attributes.isEmpty()) {
-            // TODO: 2022-5-10 封装为MessageEventInfo
+    protected MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType) {
+        // 获取方法EventMapping注解信息
+        AnnotationAttributes eventMapping = AnnotatedElementUtils
+                .getMergedAnnotationAttributes(method, EventMapping.class);
+
+        // 获取类上面的EventController
+        AnnotationAttributes eventController = AnnotatedElementUtils
+                .getMergedAnnotationAttributes(beanType, EventController.class);
+
+        MessageEventMappingInfo mappingInfo = null;
+        if (eventMapping != null && !eventMapping.isEmpty() && eventController != null) {
+            mappingInfo = new MessageEventMappingInfo.Builder()
+                    .sender((Long) eventMapping.get("sender"))
+                    .senderName(eventMapping.getString("senderName"))
+                    .event(eventMapping.getClass("event"))
+                    .content(eventMapping.getString("content"))
+                    .botId((Long) eventController.get("botId"))
+                    .build();
         }
-        return null;
+        return mappingInfo;
     }
 
 }

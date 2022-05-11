@@ -1,7 +1,7 @@
 package io.github.jiusiz.core.handler;
 
 import io.github.jiusiz.core.HandlerMapping;
-import io.github.jiusiz.core.MessageEventInfo;
+import io.github.jiusiz.core.MessageEventMappingInfo;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.support.ApplicationContextSupport;
 import org.springframework.beans.factory.InitializingBean;
@@ -47,13 +47,14 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         Method[] methods = beanType.getDeclaredMethods();
         for (Method method : methods) {
             if (isHandlerMethod(method)) {
-                MessageEventInfo messageEventInfo = createMessageEventInfo(method, beanType);
+                MessageEventMappingInfo messageEventMappingInfo = createMessageEventInfo(method, beanType);
+                // TODO: 2022-5-11 注册映射信息
             }
         }
 
     }
 
-    protected abstract MessageEventInfo createMessageEventInfo(Method method, Class<?> beanType);
+    protected abstract MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
      * 判断是否为需要的处理器

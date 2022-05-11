@@ -13,7 +13,7 @@ public class AnnotationTests {
 
     @Test
     void AnnotatedUtilsTest() {
-        AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(TestWithAnno.class, EventHandler.class);
+        AnnotationAttributes attributes = AnnotatedElementUtils.getMergedAnnotationAttributes(TestWithAnno.class, EventController.class);
         assert attributes != null;
         long botId = (long) attributes.get("botId");
         System.out.println(botId);
