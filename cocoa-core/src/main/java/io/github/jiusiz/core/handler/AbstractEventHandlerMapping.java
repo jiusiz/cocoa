@@ -1,9 +1,11 @@
 package io.github.jiusiz.core.handler;
 
+import io.github.jiusiz.core.EventMappingInfo;
 import io.github.jiusiz.core.HandlerMapping;
 import io.github.jiusiz.core.MessageEventMappingInfo;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.support.ApplicationContextSupport;
+import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
@@ -81,4 +83,25 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
      * 是否为需要的处理方法
      */
     protected abstract boolean isHandlerMethod(Method method);
+
+    @Override
+    public HandlerMethod getHandler(Event event) {
+        return getHandlerInternal(event);
+    }
+
+    /**
+     * 默认获得处理器的内部方法
+     */
+    protected HandlerMethod getHandlerInternal(Event event){
+        EventMappingInfo info =  getRealEventMappingInfo(event);
+        // TODO: 2022-5-12 封装请求事件信息
+        // TODO: 匹配注册中心
+        // TODO: 返回，如果没有找到别忘了返回为null
+        return null;
+    }
+
+    /**
+     * 获取请求事件的映射信息
+     */
+    protected abstract EventMappingInfo getRealEventMappingInfo(Event event);
 }

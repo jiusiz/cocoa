@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
  * @since 2022-05-09 下午 9:33
  */
 public class HandlerMethod {
+
     private Object bean;
     private Method method;
 
@@ -15,4 +16,5 @@ public class HandlerMethod {
         this.bean = bean;
         this.method = method;
     }
+
 }

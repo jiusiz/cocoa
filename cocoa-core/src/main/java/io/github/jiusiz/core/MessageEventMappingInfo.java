@@ -5,6 +5,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.MessageEvent;
 
 /**
+ * TODO 更名为注解信息封装
  * @author jiusiz
  * @version 0.1.0
  * @since 2022-05-09 下午 8:08
