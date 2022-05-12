@@ -21,6 +21,8 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     protected final Map<String, HandlerMethod> handlerMethods = new HashMap<>();
 
+    protected final Map<MessageEventMappingInfo, HandlerMethod> handlerMethodCenter = new HashMap<>();
+
     @Override
     public void afterPropertiesSet() throws Exception {
         System.out.println("InitializingBean的方法调用。。。");
@@ -41,6 +43,9 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         }
     }
 
+    /**
+     * 处理bean，将带有注解的方法封装为映射信息
+     */
     private void processBean(Class<?> beanType) {
         Assert.notNull(beanType, "beanType require not null");
 
@@ -48,20 +53,32 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         for (Method method : methods) {
             if (isHandlerMethod(method)) {
                 MessageEventMappingInfo messageEventMappingInfo = createMessageEventInfo(method, beanType);
-                // TODO: 2022-5-11 注册映射信息
+                registerHandlerMethod(messageEventMappingInfo, method, beanType);
             }
         }
 
     }
 
+    /**
+     * 将bean封装为HandlerMethod
+     */
+    private void registerHandlerMethod(MessageEventMappingInfo messageEventMappingInfo, Method method, Class<?> beanType) {
+        HandlerMethod handlerMethod = new HandlerMethod(beanType, method);
+        handlerMethodCenter.put(messageEventMappingInfo, handlerMethod);
+    }
+
+    /**
+     * 创建映射信息
+     */
     protected abstract MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
      * 判断是否为需要的处理器
-     *
-     * @return 是否为本类需要的处理器
      */
     protected abstract boolean isHandler(Class<?> type);
 
+    /**
+     * 是否为需要的处理方法
+     */
     protected abstract boolean isHandlerMethod(Method method);
 }
