@@ -6,6 +6,7 @@ import io.github.jiusiz.core.annotation.EventController;
 import io.github.jiusiz.core.annotation.method.EventMapping;
 import io.github.jiusiz.core.method.HandlerMethod;
 import net.mamoe.mirai.event.Event;
+import net.mamoe.mirai.event.events.MessageEvent;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 
@@ -19,16 +20,25 @@ import java.lang.reflect.Method;
  */
 public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
+    /**
+     * 是否为本类需要的处理器
+     */
     @Override
     protected boolean isHandler(Class<?> type) {
         return AnnotatedElementUtils.hasAnnotation(type, EventController.class);
     }
 
+    /**
+     * 是否为本类需要的处理器方法
+     */
     @Override
     protected boolean isHandlerMethod(Method method) {
         return AnnotatedElementUtils.hasAnnotation(method, EventMapping.class);
     }
 
+    /**
+     * 创建注释匹配信息
+     */
     @Override
     protected MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType) {
         // 获取方法EventMapping注解信息
@@ -54,13 +64,25 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     @Override
     protected HandlerMethod getHandlerInternal(Event event) {
-        // TODO: 2022-5-12 等待实现
+        if (!isMessageEvent(event)) {
+            return null;
+        }
+
+        EventMappingInfo info = getRealEventMappingInfo(event);
+        // TODO: 匹配注册中心
+        // TODO: 返回，如果没有找到别忘了返回为null
         return null;
+    }
+
+    /**
+     * 判断是否为消息事件
+     */
+    protected boolean isMessageEvent(Event event) {
+        return event instanceof MessageEvent;
     }
 
     @Override
     protected EventMappingInfo getRealEventMappingInfo(Event event) {
-        // TODO: 2022-5-12 创建实际事件映射信息
-        return null;
+        return new EventMappingInfo((MessageEvent) event);
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  */
 public abstract class AbstractEventDispatcher implements ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
 
-    /* 日志 */
+    /** 日志 */
     protected final Log logger = LogFactory.getLog(getClass());
 
     protected ApplicationContext context;
@@ -37,7 +37,6 @@ public abstract class AbstractEventDispatcher implements ApplicationContextAware
 
     /**
      * 将日志分级别进行打印
-     *
      * @param log 日志主体
      */
     protected void log(Object log) {

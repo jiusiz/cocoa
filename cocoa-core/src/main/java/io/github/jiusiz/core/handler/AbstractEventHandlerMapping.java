@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * TODO 基础模型
+ *  事件先获取机器人id，由机器人id映射到具体的控制器（多值） Map （BotId -> Controller）
+ *  由事件
  * @author jiusiz
  * @version 0.1.0
  * @since 2022-05-10 下午 3:20
@@ -92,13 +95,7 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     /**
      * 默认获得处理器的内部方法
      */
-    protected HandlerMethod getHandlerInternal(Event event){
-        EventMappingInfo info =  getRealEventMappingInfo(event);
-        // TODO: 2022-5-12 封装请求事件信息
-        // TODO: 匹配注册中心
-        // TODO: 返回，如果没有找到别忘了返回为null
-        return null;
-    }
+    protected abstract HandlerMethod getHandlerInternal(Event event);
 
     /**
      * 获取请求事件的映射信息

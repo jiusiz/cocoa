@@ -10,7 +10,7 @@ import net.mamoe.mirai.event.events.MessageEvent;
  * @version 0.1.0
  * @since 2022-05-09 下午 8:08
  */
-public final class MessageEventMappingInfo implements EventMatchable {
+public final class MessageEventMappingInfo {
 
     private MatchPattern pattern;
     private String content;
@@ -23,12 +23,6 @@ public final class MessageEventMappingInfo implements EventMatchable {
     private Long botId;
 
     private MessageEventMappingInfo() {
-    }
-
-    @Override
-    public boolean match(MessageEventMappingInfo matchInfo) {
-        // TODO 添加实现
-        return false;
     }
 
     public static class Builder {
@@ -50,9 +44,8 @@ public final class MessageEventMappingInfo implements EventMatchable {
             this.messageEventMappingInfo.content = messageEvent.getMessage().serializeToMiraiCode();
             this.messageEventMappingInfo.sender = messageEvent.getSender().getId();
             this.messageEventMappingInfo.subject = messageEvent.getSubject();
-            Class<? extends Contact> subjectClass = messageEvent.getSubject().getClass();
 
-            if (subjectClass.isAssignableFrom(Group.class)) {
+            if (this.messageEventMappingInfo.subject instanceof Group) {
                 this.messageEventMappingInfo.subjectType = SubjectType.GROUP;
             } else {
                 this.messageEventMappingInfo.subjectType = SubjectType.USER;
