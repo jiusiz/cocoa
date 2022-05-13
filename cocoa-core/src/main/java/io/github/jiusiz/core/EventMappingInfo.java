@@ -4,7 +4,6 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.User;
-import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.MessageChain;
 
@@ -23,7 +22,11 @@ public class EventMappingInfo {
         this.messageEventInfo = new MessageEventInfo(event);
     }
 
-    class MessageEventInfo {
+    public MessageEventInfo getMessageEventInfo(){
+        return this.messageEventInfo;
+    }
+
+    public class MessageEventInfo {
         public Bot bot;
         public Contact subject;
         public User sender;
@@ -71,5 +74,11 @@ public class EventMappingInfo {
             return this.senderName;
         }
 
+        /**
+         * 获取机器人的id
+         */
+        public Long getBotId(){
+            return this.bot.getId();
+        }
     }
 }

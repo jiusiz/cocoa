@@ -29,7 +29,6 @@ public class BotProperties {
         }
     }
 
-    // TODO 测试使用
     public String toString() {
         return "BotProperties{" +
                 "qq=" + qq +

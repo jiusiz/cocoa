@@ -1,13 +1,13 @@
 package io.github.jiusiz.core.handler;
 
-import io.github.jiusiz.core.EventMappingInfo;
+import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.HandlerMapping;
-import io.github.jiusiz.core.MessageEventMappingInfo;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.support.ApplicationContextSupport;
 import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Method;
@@ -15,18 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO 基础模型
- *  事件先获取机器人id，由机器人id映射到具体的控制器（多值） Map （BotId -> Controller）
- *  由事件
  * @author jiusiz
  * @version 0.1.0
  * @since 2022-05-10 下午 3:20
  */
 public abstract class AbstractEventHandlerMapping extends ApplicationContextSupport implements InitializingBean, HandlerMapping {
 
-    protected final Map<String, HandlerMethod> handlerMethods = new HashMap<>();
-
-    protected final Map<MessageEventMappingInfo, HandlerMethod> handlerMethodCenter = new HashMap<>();
+    protected final Map<EventMappingAnnotationInfo, HandlerMethod> handlerMethodCenter = new HashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -57,8 +52,8 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         Method[] methods = beanType.getDeclaredMethods();
         for (Method method : methods) {
             if (isHandlerMethod(method)) {
-                MessageEventMappingInfo messageEventMappingInfo = createMessageEventInfo(method, beanType);
-                registerHandlerMethod(messageEventMappingInfo, method, beanType);
+                EventMappingAnnotationInfo eventMappingAnnotationInfo = createMessageEventInfo(method, beanType);
+                registerHandlerMethod(eventMappingAnnotationInfo, method, beanType);
             }
         }
 
@@ -67,15 +62,15 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     /**
      * 将bean封装为HandlerMethod
      */
-    private void registerHandlerMethod(MessageEventMappingInfo messageEventMappingInfo, Method method, Class<?> beanType) {
+    private void registerHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo, Method method, Class<?> beanType) {
         HandlerMethod handlerMethod = new HandlerMethod(beanType, method);
-        handlerMethodCenter.put(messageEventMappingInfo, handlerMethod);
+        handlerMethodCenter.put(eventMappingAnnotationInfo, handlerMethod);
     }
 
     /**
      * 创建映射信息
      */
-    protected abstract MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType);
+    protected abstract EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
      * 判断是否为需要的处理器
@@ -93,12 +88,15 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     }
 
     /**
-     * 默认获得处理器的内部方法
+     * 获得处理器的子类模板方法
      */
     protected abstract HandlerMethod getHandlerInternal(Event event);
 
     /**
-     * 获取请求事件的映射信息
+     * 获取HandlerMethod
      */
-    protected abstract EventMappingInfo getRealEventMappingInfo(Event event);
+    @Nullable
+    protected HandlerMethod getHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo) {
+        return this.handlerMethodCenter.get(eventMappingAnnotationInfo);
+    }
 }

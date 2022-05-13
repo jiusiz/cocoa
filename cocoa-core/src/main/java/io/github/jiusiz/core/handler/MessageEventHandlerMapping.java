@@ -1,9 +1,10 @@
 package io.github.jiusiz.core.handler;
 
+import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.EventMappingInfo;
-import io.github.jiusiz.core.MessageEventMappingInfo;
 import io.github.jiusiz.core.annotation.EventController;
 import io.github.jiusiz.core.annotation.method.EventMapping;
+import io.github.jiusiz.core.exception.AnnotationNotFoundException;
 import io.github.jiusiz.core.method.HandlerMethod;
 import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.MessageEvent;
@@ -11,6 +12,10 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 只是用来保存和消息时间有关的处理器映射
@@ -19,6 +24,8 @@ import java.lang.reflect.Method;
  * @since 2022-05-09 下午 9:41
  */
 public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
+
+    private final Map<Long, List<EventMappingAnnotationInfo>> botIdMap = new HashMap<>();
 
     /**
      * 是否为本类需要的处理器
@@ -37,29 +44,38 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
     }
 
     /**
-     * 创建注释匹配信息
+     * 创建注解匹配信息
      */
     @Override
-    protected MessageEventMappingInfo createMessageEventInfo(Method method, Class<?> beanType) {
-        // 获取方法EventMapping注解信息
-        AnnotationAttributes eventMapping = AnnotatedElementUtils
-                .getMergedAnnotationAttributes(method, EventMapping.class);
-
+    protected EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType) {
         // 获取类上面的EventController
         AnnotationAttributes eventController = AnnotatedElementUtils
                 .getMergedAnnotationAttributes(beanType, EventController.class);
 
-        MessageEventMappingInfo mappingInfo = null;
-        if (eventMapping != null && !eventMapping.isEmpty() && eventController != null) {
-            mappingInfo = new MessageEventMappingInfo.Builder()
-                    .sender((Long) eventMapping.get("sender"))
-                    .senderName(eventMapping.getString("senderName"))
-                    .event(eventMapping.getClass("event"))
-                    .content(eventMapping.getString("content"))
-                    .botId((Long) eventController.get("botId"))
-                    .build();
+        // 获取方法EventMapping注解信息
+        AnnotationAttributes eventMapping = AnnotatedElementUtils
+                .getMergedAnnotationAttributes(method, EventMapping.class);
+
+        if (eventController == null || eventMapping == null) {
+            throw new AnnotationNotFoundException("获取注解信息失败");
         }
-        return mappingInfo;
+
+        Long botId = (Long) eventController.get("botId");
+        String content = eventMapping.getString("content");
+        Long sender = (Long) eventMapping.get("sender");
+        String senderName = eventMapping.getString("senderName");
+        Class<?> event = eventController.getClass("event");
+
+        EventMappingAnnotationInfo info = new EventMappingAnnotationInfo(content, sender, senderName, event);
+        // 加入botIdMap中
+        if (this.botIdMap.containsKey(botId)) {
+            this.botIdMap.get(botId).add(info);
+        } else {
+            ArrayList<EventMappingAnnotationInfo> list = new ArrayList<>();
+            this.botIdMap.put(botId, list);
+        }
+
+        return info;
     }
 
     @Override
@@ -68,10 +84,19 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
             return null;
         }
 
-        EventMappingInfo info = getRealEventMappingInfo(event);
-        // TODO: 匹配注册中心
-        // TODO: 返回，如果没有找到别忘了返回为null
-        return null;
+        MessageEvent ms = (MessageEvent) event;
+        EventMappingInfo info = getEventMappingInfo(ms);
+
+        EventMappingInfo.MessageEventInfo messageEventInfo = info.getMessageEventInfo();
+        Long botId = messageEventInfo.getBotId();
+        List<EventMappingAnnotationInfo> mappingInfoList = this.botIdMap.get(botId);
+        EventMappingAnnotationInfo bestMappingInfo = getBestMappingInfo(ms, mappingInfoList);
+
+        if (bestMappingInfo == null) {
+            return null;
+        }
+
+        return super.getHandlerMethod(bestMappingInfo);
     }
 
     /**
@@ -81,8 +106,27 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
         return event instanceof MessageEvent;
     }
 
-    @Override
-    protected EventMappingInfo getRealEventMappingInfo(Event event) {
-        return new EventMappingInfo((MessageEvent) event);
+    /**
+     * 获取事件映射信息
+     */
+    protected EventMappingInfo getEventMappingInfo(MessageEvent messageEvent) {
+        return new EventMappingInfo(messageEvent);
     }
+
+    /**
+     * 获取最佳映射信息
+     */
+    private EventMappingAnnotationInfo getBestMappingInfo(MessageEvent ms, List<EventMappingAnnotationInfo> mappingInfoList) {
+        List<EventMappingAnnotationInfo> chooseList = new ArrayList<>();
+        Class<? extends MessageEvent> msClass = ms.getClass();
+        // 选择与事件类型相对应的注解
+        for (EventMappingAnnotationInfo mappingInfo : mappingInfoList) {
+            if (msClass.isAssignableFrom(mappingInfo.getEventClass())) {
+                chooseList.add(mappingInfo);
+            }
+        }
+        // TODO: 2022-5-13 匹配剩余信息
+        return null;
+    }
+
 }
