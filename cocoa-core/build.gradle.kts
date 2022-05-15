@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "2.6.5"
+    id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm")
     kotlin("plugin.spring") version "1.6.10"
@@ -52,7 +52,7 @@ java {
 
 publishing {
     publications {
-        create<MavenPublication>("m") {
+        create<MavenPublication>("cocoa") {
             groupId = "${project.group}"
             artifactId = project.name
             this.version = "${project.version}"

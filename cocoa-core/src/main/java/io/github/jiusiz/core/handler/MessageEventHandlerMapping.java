@@ -10,12 +10,10 @@ import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.MessageEvent;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 只是用来保存和消息时间有关的处理器映射
@@ -69,7 +67,10 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
         EventMappingAnnotationInfo info = new EventMappingAnnotationInfo(content, sender, senderName, event);
         // 加入botIdMap中
         if (this.botIdMap.containsKey(botId)) {
-            this.botIdMap.get(botId).add(info);
+            List<EventMappingAnnotationInfo> list = this.botIdMap.get(botId);
+            list.add(info);
+            // 排序
+            Collections.sort(list);
         } else {
             ArrayList<EventMappingAnnotationInfo> list = new ArrayList<>();
             this.botIdMap.put(botId, list);
@@ -117,15 +118,35 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
      * 获取最佳映射信息
      */
     private EventMappingAnnotationInfo getBestMappingInfo(MessageEvent ms, List<EventMappingAnnotationInfo> mappingInfoList) {
-        List<EventMappingAnnotationInfo> chooseList = new ArrayList<>();
+        String miraiCode = ms.getMessage().serializeToMiraiCode();
+        long senderId = ms.getSender().getId();
+        String senderName = ms.getSenderName();
         Class<? extends MessageEvent> msClass = ms.getClass();
-        // 选择与事件类型相对应的注解
+
         for (EventMappingAnnotationInfo mappingInfo : mappingInfoList) {
-            if (msClass.isAssignableFrom(mappingInfo.getEventClass())) {
-                chooseList.add(mappingInfo);
+            // 如果注解senderId有效，并且不相等，下一个
+            if (mappingInfo.getSender() != 0 && mappingInfo.getSender() != senderId) {
+                continue;
             }
+            // 如果content有内容并且不匹配，下一个
+            if (StringUtils.hasText(mappingInfo.getContent()) && !miraiCode.matches(mappingInfo.getContent())) {
+                continue;
+            }
+            // 如果senderName有内容且不匹配，下一个
+            if (StringUtils.hasText(mappingInfo.getSenderName()) && !senderName.matches(mappingInfo.getSenderName())) {
+                continue;
+            }
+            // 如果EventClass不为空且不为默认值，并且不与当前事件匹配，下一个
+            if (mappingInfo.getEventClass() != null && mappingInfo.getEventClass() != Event.class
+                    && mappingInfo.getEventClass() != msClass) {
+                continue;
+            }
+            // 如果是注解类型的子类，返回此MappingInfo
+            if (mappingInfo.getEventClass() != null && mappingInfo.getEventClass().isAssignableFrom(msClass)) {
+                return mappingInfo;
+            }
+            return mappingInfo;
         }
-        // TODO: 2022-5-13 匹配剩余信息
         return null;
     }
 
