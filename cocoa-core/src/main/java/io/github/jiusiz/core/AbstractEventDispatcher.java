@@ -20,7 +20,6 @@ public abstract class AbstractEventDispatcher implements ApplicationContextAware
 
     protected ApplicationContext context;
 
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
@@ -33,18 +32,6 @@ public abstract class AbstractEventDispatcher implements ApplicationContextAware
 
     protected void onRefresh(ApplicationContext context) {
         // 为子类留下模板方法，容器刷新完成后调用
-    }
-
-    /**
-     * 将日志分级别进行打印
-     * @param log 日志主体
-     */
-    protected void log(Object log) {
-        if (logger.isTraceEnabled()) {
-            logger.trace(log);
-        } else if (logger.isDebugEnabled()) {
-            logger.debug(log);
-        }
     }
 
 }

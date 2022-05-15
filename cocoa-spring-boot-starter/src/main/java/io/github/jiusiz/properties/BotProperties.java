@@ -13,10 +13,46 @@ import java.util.List;
 @ConfigurationProperties(prefix = "cocoa")
 public class BotProperties {
     private List<QQAccount> qq;
+    private String device = null;
+    private String cache = null;
+    private Boolean autoReconnection = false;
+    private Boolean contactCache = false;
 
     public List<QQAccount> getQq() {
         verify();
         return qq;
+    }
+
+    public Boolean getContactCache() {
+        return contactCache;
+    }
+
+    public void setContactCache(Boolean contactCache) {
+        this.contactCache = contactCache;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
+    }
+
+    public String getCache() {
+        return cache;
+    }
+
+    public void setCache(String cache) {
+        this.cache = cache;
+    }
+
+    public Boolean getAutoReconnection() {
+        return autoReconnection;
+    }
+
+    public void setAutoReconnection(Boolean autoReconnection) {
+        this.autoReconnection = autoReconnection;
     }
 
     public void setQq(List<QQAccount> qq) {

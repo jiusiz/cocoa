@@ -18,7 +18,6 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     private List<HandlerMapping> handlerMappings;
 
-
     @Override
     protected void onRefresh(ApplicationContext context) {
         initHandlerMappings(context);
@@ -52,6 +51,12 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
         // 如果没有处理器则会直接返回，无法处理本次事件
         if (handler == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("无法处理事件：" + event.getClass().getName());
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("无法处理事件：" + event.getClass().getName());
+            }
             return;
         }
         // TODO: 2022-5-12 增加适配器
