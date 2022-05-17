@@ -12,7 +12,7 @@ plugins {
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-    api("net.mamoe:mirai-core:2.10.2")
+    api("net.mamoe:mirai-core:2.10.3")
 
     implementation(kotlin("stdlib"))
     implementation("org.springframework.boot:spring-boot-starter")
@@ -22,6 +22,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+}
+repositories {
+    mavenCentral()
 }
 
 tasks.withType<JavaCompile> {

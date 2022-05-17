@@ -19,6 +19,7 @@ public @interface EventController {
 
     /**
      * 声明此类是哪一个机器人的处理器
+     * @return 机器人id
      */
     @AliasFor("botId")
     long value() default 0;

@@ -59,6 +59,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     /**
      * 暴露接受事件
+     * @param event 事件
      */
     public void doService(Event event) {
         dispatch(event);

@@ -1,5 +1,9 @@
 package io.github.jiusiz.core.handler;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.HandlerMapping;
 import io.github.jiusiz.core.method.HandlerMethod;
@@ -9,10 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author jiusiz
@@ -69,16 +69,23 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     /**
      * 创建映射信息
+     * @param method 方法
+     * @param beanType bean类型
+     * @return 封装好的注解信息
      */
     protected abstract EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
      * 判断是否为需要的处理器
+     * @param type 处理器类型
+     * @return 是否为需要的
      */
     protected abstract boolean isHandler(Class<?> type);
 
     /**
      * 是否为需要的处理方法
+     * @param method 方法
+     * @return 是否为需要的方法
      */
     protected abstract boolean isHandlerMethod(Method method);
 
@@ -89,11 +96,15 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     /**
      * 获得处理器的子类模板方法
+     * @param event 事件
+     * @return 处理器方法
      */
     protected abstract HandlerMethod getHandlerInternal(Event event);
 
     /**
      * 获取HandlerMethod
+     * @param eventMappingAnnotationInfo 事件的注解封装信息
+     * @return 处理器方法
      */
     @Nullable
     protected HandlerMethod getHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo) {

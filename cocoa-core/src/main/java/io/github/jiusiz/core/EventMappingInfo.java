@@ -45,6 +45,7 @@ public class EventMappingInfo {
 
         /**
          * 获取消息转义后的mirai码
+         * @return 转义后的mirai码
          */
         public String getMiraiCode() {
             return this.message.serializeToMiraiCode();
@@ -52,6 +53,7 @@ public class EventMappingInfo {
 
         /**
          * 获取发送人id
+         * @return 发送人id
          */
         public Long getSenderId() {
             return this.sender.getId();
@@ -59,6 +61,7 @@ public class EventMappingInfo {
 
         /**
          * 获取群id，如果不是群，则返回null
+         * @return 群id
          */
         public Long getGroupId() {
             if (this.subject instanceof Group) {
@@ -69,6 +72,7 @@ public class EventMappingInfo {
 
         /**
          * 获取发送人昵称
+         * @return 发送人昵称
          */
         public String getName() {
             return this.senderName;
@@ -76,6 +80,7 @@ public class EventMappingInfo {
 
         /**
          * 获取机器人的id
+         * @return 机器人的id
          */
         public Long getBotId(){
             return this.bot.getId();

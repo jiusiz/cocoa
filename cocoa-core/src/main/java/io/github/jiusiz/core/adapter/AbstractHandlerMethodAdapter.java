@@ -21,6 +21,8 @@ public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, In
 
     /**
      * 子类是否支持
+     * @param handlerMethod 处理器方法
+     * @return 内部是否支持
      */
     protected abstract boolean supportsInternal(HandlerMethod handlerMethod);
 

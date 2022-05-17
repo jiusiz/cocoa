@@ -1,5 +1,8 @@
 package io.github.jiusiz.core.handler;
 
+import java.lang.reflect.Method;
+import java.util.*;
+
 import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.EventMappingInfo;
 import io.github.jiusiz.core.annotation.EventController;
@@ -11,9 +14,6 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 /**
  * 只是用来保存和消息时间有关的处理器映射
@@ -102,6 +102,8 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     /**
      * 判断是否为消息事件
+     * @param event 事件
+     * @return 是否为消息事件
      */
     protected boolean isMessageEvent(Event event) {
         return event instanceof MessageEvent;
@@ -109,6 +111,8 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     /**
      * 获取事件映射信息
+     * @param messageEvent 消息事件
+     * @return 事件的映射信息
      */
     protected EventMappingInfo getEventMappingInfo(MessageEvent messageEvent) {
         return new EventMappingInfo(messageEvent);
