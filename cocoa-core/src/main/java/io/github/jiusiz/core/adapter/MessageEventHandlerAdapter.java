@@ -1,9 +1,13 @@
 package io.github.jiusiz.core.adapter;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
+import io.github.jiusiz.core.adapter.resolver.MessageEventArgumentResolver;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.method.MethodParameter;
+import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 
 /**
@@ -20,8 +24,20 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
         initArgumentResolvers();
     }
 
+    /**
+     * 初始化参数解析器
+     */
     private void initArgumentResolvers() {
-        // TODO: 2022-5-17 添加参数解析器
+        this.argumentResolvers = getDefaultArgumentResolvers();
+    }
+
+    /**
+     * 获取默认的参数解析器
+     */
+    private List<ArgumentResolver> getDefaultArgumentResolvers() {
+        List<ArgumentResolver> list = new ArrayList<>();
+        list.add(new MessageEventArgumentResolver());
+        return list;
     }
 
     @Override
@@ -30,7 +46,7 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
     }
 
     @Override
-    protected void handleInternal(Event event, HandlerMethod handler) {
+    protected EventModel handleInternal(Event event, HandlerMethod handler) {
         // 准备参数
         Object[] args = new Object[handler.getParameterCount()];
 
@@ -41,8 +57,10 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
             args[i] = resolver.resolveArgument(event, handler);
         }
 
-        invokeMethod();
+        EventModel eventModel = invokeMethod(handler, args);
         // TODO: 2022-5-17 这里是返回值处理器工作的地方
+
+        return eventModel;
     }
 
     private ArgumentResolver findArgumentResolver(MethodParameter parameter) {
@@ -56,8 +74,17 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
         throw new RuntimeException("未找到参数解析器");
     }
 
-    private Object invokeMethod() {
-        // TODO: 2022-5-17 目标方法的执行
-        return null;
+    private EventModel invokeMethod(HandlerMethod handler, Object[] args) {
+        Method method = handler.getMethod();
+        Object bean = handler.getBean();
+        Object result = null;
+
+        try {
+            result = method.invoke(bean, args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new EventModel(result);
     }
 }

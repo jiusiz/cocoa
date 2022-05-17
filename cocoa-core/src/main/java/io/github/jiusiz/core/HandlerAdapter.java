@@ -1,5 +1,6 @@
 package io.github.jiusiz.core;
 
+import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 
 /**
@@ -12,5 +13,5 @@ public interface HandlerAdapter {
 
     boolean supports(Object handler);
 
-    void handle(Event event, Object handler);
+    EventModel handle(Event event, Object handler);
 }

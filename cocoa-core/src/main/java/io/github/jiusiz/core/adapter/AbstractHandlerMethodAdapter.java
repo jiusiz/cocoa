@@ -2,6 +2,7 @@ package io.github.jiusiz.core.adapter;
 
 import io.github.jiusiz.core.HandlerAdapter;
 import io.github.jiusiz.core.method.HandlerMethod;
+import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -24,9 +25,9 @@ public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, In
     protected abstract boolean supportsInternal(HandlerMethod handlerMethod);
 
     @Override
-    public void handle(Event event, Object handler) {
-        handleInternal(event, (HandlerMethod)handler);
+    public EventModel handle(Event event, Object handler) {
+        return handleInternal(event, (HandlerMethod)handler);
     }
 
-    protected abstract void handleInternal(Event event, HandlerMethod handler);
+    protected abstract EventModel handleInternal(Event event, HandlerMethod handler);
 }

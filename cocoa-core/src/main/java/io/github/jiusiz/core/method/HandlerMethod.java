@@ -42,6 +42,14 @@ public class HandlerMethod {
         return jmp;
     }
 
+    public Method getMethod() {
+        return method;
+    }
+
+    public Object getBean() {
+        return bean;
+    }
+
     public MethodParameter[] getParameters() {
         return parameters;
     }

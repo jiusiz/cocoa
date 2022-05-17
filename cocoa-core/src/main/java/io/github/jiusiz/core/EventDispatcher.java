@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
@@ -63,6 +64,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
      */
     private void dispatch(Event event) {
         Object handler = getHandler(event);
+        EventModel ev = null;
 
         // 如果没有处理器则会直接返回，无法处理本次事件
         if (handler == null) {
@@ -83,8 +85,8 @@ public class EventDispatcher extends AbstractEventDispatcher {
         }
 
         try {
-            ha.handle(event, handler);
-        } catch (Exception e){
+            ev = ha.handle(event, handler);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
