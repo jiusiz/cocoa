@@ -2,6 +2,7 @@ package io.github.jiusiz.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -21,7 +22,7 @@ public abstract class AbstractEventDispatcher implements ApplicationContextAware
     protected ApplicationContext context;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
 

@@ -1,13 +1,12 @@
 package io.github.jiusiz.core;
 
-import io.github.jiusiz.core.method.HandlerMethod;
-import net.mamoe.mirai.event.Event;
-import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.context.ApplicationContext;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import net.mamoe.mirai.event.Event;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author jiusiz
@@ -18,9 +17,12 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     private List<HandlerMapping> handlerMappings;
 
+    private List<HandlerAdapter> handlerAdapters;
+
     @Override
     protected void onRefresh(ApplicationContext context) {
         initHandlerMappings(context);
+        initHandlerAdapters(context);
     }
 
     private void initHandlerMappings(ApplicationContext context) {
@@ -33,7 +35,20 @@ public class EventDispatcher extends AbstractEventDispatcher {
             this.handlerMappings = new ArrayList<>(matchingBeans.values());
         }
 
-        // TODO 增加：无handlerMapping的策略
+        // TODO 增加：添加默认handlerMapping
+    }
+
+    private void initHandlerAdapters(ApplicationContext context) {
+        this.handlerAdapters = null;
+
+        Map<String, HandlerAdapter> matchingBeans =
+                BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
+
+        if (!matchingBeans.isEmpty()) {
+            this.handlerAdapters = new ArrayList<>(matchingBeans.values());
+        }
+
+        // TODO: 2022-5-17 添加默认HandlerAdapter
     }
 
     /**
@@ -46,8 +61,8 @@ public class EventDispatcher extends AbstractEventDispatcher {
     /**
      * 实际的调度方法
      */
-    public void dispatch(Event event) {
-        HandlerMethod handler = getHandler(event);
+    private void dispatch(Event event) {
+        Object handler = getHandler(event);
 
         // 如果没有处理器则会直接返回，无法处理本次事件
         if (handler == null) {
@@ -65,10 +80,10 @@ public class EventDispatcher extends AbstractEventDispatcher {
     /**
      * 根据事件获取处理器
      */
-    private HandlerMethod getHandler(Event event) {
+    private Object getHandler(Event event) {
         if (handlerMappings != null) {
             for (HandlerMapping handlerMapping : handlerMappings) {
-                HandlerMethod handler = handlerMapping.getHandler(event);
+                Object handler = handlerMapping.getHandler(event);
                 if (handler != null) {
                     return handler;
                 }
