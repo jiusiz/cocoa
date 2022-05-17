@@ -74,7 +74,19 @@ public class EventDispatcher extends AbstractEventDispatcher {
             }
             return;
         }
-        // TODO: 2022-5-12 增加适配器
+
+        HandlerAdapter ha = getAdapter(handler);
+
+        if (ha == null) {
+            logger.warn("未找到适配器处理此方法" + handler.getClass());
+            return;
+        }
+
+        try {
+            ha.handle(event, handler);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -92,5 +104,15 @@ public class EventDispatcher extends AbstractEventDispatcher {
         return null;
     }
 
+    private HandlerAdapter getAdapter(Object handler) {
+        if (handlerAdapters != null) {
+            for (HandlerAdapter handlerAdapter : handlerAdapters) {
+                if (handlerAdapter.supports(handler)) {
+                    return handlerAdapter;
+                }
+            }
+        }
+        return null;
+    }
 
 }

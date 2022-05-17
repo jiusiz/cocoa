@@ -10,7 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @version 0.1.0
  * @since 2022-05-16 下午 9:04
  */
-public abstract class AbstractHandlerAdapter implements HandlerAdapter, InitializingBean {
+public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, InitializingBean {
 
     @Override
     public boolean supports(Object handler) {
@@ -25,8 +25,8 @@ public abstract class AbstractHandlerAdapter implements HandlerAdapter, Initiali
 
     @Override
     public void handle(Event event, Object handler) {
-        handleInternal(event, handler);
+        handleInternal(event, (HandlerMethod)handler);
     }
 
-    protected abstract void handleInternal(Event event, Object handler);
+    protected abstract void handleInternal(Event event, HandlerMethod handler);
 }
