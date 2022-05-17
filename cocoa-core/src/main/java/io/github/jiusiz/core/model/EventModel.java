@@ -7,9 +7,16 @@ package io.github.jiusiz.core.model;
  * @since 0.1.0 2022-05-17 上午 10:44
  */
 public class EventModel {
+
     private Object primitiveValue;
+
+    private Class<?> eventClass;
 
     public EventModel(Object primitiveValue) {
         this.primitiveValue = primitiveValue;
+    }
+
+    public void setEventClass(Class<?> eventClass) {
+        this.eventClass = eventClass;
     }
 }

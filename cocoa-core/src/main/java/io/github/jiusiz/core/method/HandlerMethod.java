@@ -50,6 +50,10 @@ public class HandlerMethod {
         return bean;
     }
 
+    public Class<?> getBeanType() {
+        return beanType;
+    }
+
     public MethodParameter[] getParameters() {
         return parameters;
     }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.github.jiusiz.core.adapter.MessageEventHandlerAdapter;
+import io.github.jiusiz.core.handler.MessageEventHandlerMapping;
 import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -35,8 +37,9 @@ public class EventDispatcher extends AbstractEventDispatcher {
         if (!matchingBeans.isEmpty()) {
             this.handlerMappings = new ArrayList<>(matchingBeans.values());
         }
-
-        // TODO 增加：添加默认handlerMapping
+        if (handlerMappings == null) {
+            this.handlerMappings = getDefaultHandlerMappings();
+        }
     }
 
     private void initHandlerAdapters(ApplicationContext context) {
@@ -49,7 +52,9 @@ public class EventDispatcher extends AbstractEventDispatcher {
             this.handlerAdapters = new ArrayList<>(matchingBeans.values());
         }
 
-        // TODO: 2022-5-17 添加默认HandlerAdapter
+        if (handlerAdapters == null) {
+            this.handlerAdapters = getDefaultHandlerAdapters();
+        }
     }
 
     /**
@@ -115,6 +120,22 @@ public class EventDispatcher extends AbstractEventDispatcher {
             }
         }
         return null;
+    }
+
+    protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
+        return context.getAutowireCapableBeanFactory().createBean(clazz);
+    }
+
+    private List<HandlerMapping> getDefaultHandlerMappings() {
+        List<HandlerMapping> defaultHandlerMappings = new ArrayList<>();
+        defaultHandlerMappings.add((HandlerMapping) createDefaultStrategy(context, MessageEventHandlerMapping.class));
+        return defaultHandlerMappings;
+    }
+
+    private List<HandlerAdapter> getDefaultHandlerAdapters() {
+        List<HandlerAdapter> defaultHandlerAdapters = new ArrayList<>();
+        defaultHandlerAdapters.add((HandlerAdapter) createDefaultStrategy(context, MessageEventHandlerAdapter.class));
+        return defaultHandlerAdapters;
     }
 
 }

@@ -1,6 +1,5 @@
 package io.github.jiusiz.core.adapter;
 
-import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.method.MethodParameter;
 import net.mamoe.mirai.event.Event;
 
@@ -15,6 +14,6 @@ public interface ArgumentResolver {
 
     boolean supportsArgument(MethodParameter parameter);
 
-    Object resolveArgument(Event event, HandlerMethod handler);
+    Object resolveArgument(Event event, MethodParameter parameter);
 
 }

@@ -3,6 +3,8 @@ package io.github.jiusiz.core.adapter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.jiusiz.core.adapter.resolver.MessageEventArgumentResolver;
 import io.github.jiusiz.core.method.HandlerMethod;
@@ -18,6 +20,8 @@ import net.mamoe.mirai.event.Event;
 public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
 
     private List<ArgumentResolver> argumentResolvers;
+
+    private final Map<MethodParameter, ArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -53,14 +57,31 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
         MethodParameter[] parameters = handler.getParameters();
 
         for (int i = 0; i < parameters.length; i++) {
-            ArgumentResolver resolver = findArgumentResolver(parameters[i]);
-            args[i] = resolver.resolveArgument(event, handler);
+            MethodParameter parameter = parameters[i];
+            // 设置事件的class
+            parameter.setEventClass(event.getClass());
+            // 先在缓存中查找
+            ArgumentResolver resolver = findArgumentResolverFromCache(parameter);
+
+            if (resolver == null) {
+                // 若没有找到，寻找全部的解析器
+                resolver = findArgumentResolver(parameter);
+                // 找到之后加入缓存
+                this.argumentResolverCache.put(parameter, resolver);
+            }
+
+            args[i] = resolver.resolveArgument(event, parameter);
         }
 
         EventModel eventModel = invokeMethod(handler, args);
+        eventModel.setEventClass(event.getClass());
         // TODO: 2022-5-17 这里是返回值处理器工作的地方
 
         return eventModel;
+    }
+
+    private ArgumentResolver findArgumentResolverFromCache(MethodParameter parameter) {
+        return this.argumentResolverCache.get(parameter);
     }
 
     private ArgumentResolver findArgumentResolver(MethodParameter parameter) {

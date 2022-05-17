@@ -1,9 +1,9 @@
 package io.github.jiusiz.core.annotation;
 
+import java.lang.annotation.*;
+
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
-
-import java.lang.annotation.*;
 
 /**
  * 声明此类为处理器，由bot字段管理机器人域
@@ -21,7 +21,7 @@ public @interface EventController {
      * 声明此类是哪一个机器人的处理器
      */
     @AliasFor("botId")
-    long value();
+    long value() default 0;
 
     @AliasFor("value")
     long botId() default 0;
