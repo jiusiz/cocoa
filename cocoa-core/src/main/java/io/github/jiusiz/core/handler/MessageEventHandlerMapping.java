@@ -62,7 +62,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
         String content = eventMapping.getString("content");
         Long sender = (Long) eventMapping.get("sender");
         String senderName = eventMapping.getString("senderName");
-        Class<?> event = eventController.getClass("event");
+        Class<?> event = eventMapping.getClass("event");
 
         EventMappingAnnotationInfo info = new EventMappingAnnotationInfo(content, sender, senderName, event);
         // 加入botIdMap中

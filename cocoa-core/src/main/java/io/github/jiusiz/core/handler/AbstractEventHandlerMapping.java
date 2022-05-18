@@ -25,8 +25,8 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("InitializingBean的方法调用。。。");
         initHandlerMethods();
+        System.out.println("InitializingBean的方法调用完成。。。");
     }
 
     /**
@@ -45,6 +45,7 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     /**
      * 处理bean，将带有注解的方法封装为映射信息
+     * @param beanType bean的class
      */
     private void processBean(Class<?> beanType) {
         Assert.notNull(beanType, "beanType require not null");
@@ -61,6 +62,9 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
 
     /**
      * 将bean封装为HandlerMethod
+     * @param eventMappingAnnotationInfo 封装的注解映射
+     * @param method 要探测方法
+     * @param beanType bean的class
      */
     private void registerHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo, Method method, Class<?> beanType) {
         HandlerMethod handlerMethod = new HandlerMethod(beanType, method);
