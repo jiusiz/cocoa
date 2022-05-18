@@ -12,8 +12,19 @@ import net.mamoe.mirai.event.Event;
  */
 public interface ArgumentResolver {
 
+    /**
+     * 是否支持解析此参数
+     * @param parameter 参数
+     * @return 是否支持
+     */
     boolean supportsArgument(MethodParameter parameter);
 
+    /**
+     * 解析参数
+     * @param event 事件
+     * @param parameter 原参数
+     * @return 解析到的参数
+     */
     Object resolveArgument(Event event, MethodParameter parameter);
 
 }

@@ -13,6 +13,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
     api("net.mamoe:mirai-core:2.10.3")
+    api("com.google.code.findbugs:annotations:3.0.1") // 消除警告
 
     implementation(kotlin("stdlib"))
     implementation("org.springframework.boot:spring-boot-starter")
@@ -55,7 +56,7 @@ java {
 
 publishing {
     publications {
-        create<MavenPublication>("cocoa") {
+        create<MavenPublication>("-cocoa-") {
             groupId = "${project.group}"
             artifactId = project.name
             this.version = "${project.version}"

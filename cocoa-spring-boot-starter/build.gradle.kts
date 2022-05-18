@@ -45,7 +45,7 @@ tasks.withType<Test> {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("-maven-") {
             groupId = "${project.group}"
             artifactId = project.name
             this.version = "${project.version}"

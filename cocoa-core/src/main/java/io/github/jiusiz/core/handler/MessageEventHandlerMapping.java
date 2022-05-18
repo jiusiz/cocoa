@@ -27,10 +27,11 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     /**
      * 是否为本类需要的处理器
+     * @param beanType 探测到的bean的class
      */
     @Override
-    protected boolean isHandler(Class<?> type) {
-        return AnnotatedElementUtils.hasAnnotation(type, EventController.class);
+    protected boolean isHandler(Class<?> beanType) {
+        return AnnotatedElementUtils.hasAnnotation(beanType, EventController.class);
     }
 
     /**
@@ -43,6 +44,9 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     /**
      * 创建注解匹配信息
+     * @param method 方法
+     * @param beanType bean类型
+     * @return 注解映射信息
      */
     @Override
     protected EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType) {
@@ -73,6 +77,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
             Collections.sort(list);
         } else {
             ArrayList<EventMappingAnnotationInfo> list = new ArrayList<>();
+            list.add(info);
             this.botIdMap.put(botId, list);
         }
 
@@ -91,6 +96,10 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
         EventMappingInfo.MessageEventInfo messageEventInfo = info.getMessageEventInfo();
         Long botId = messageEventInfo.getBotId();
         List<EventMappingAnnotationInfo> mappingInfoList = this.botIdMap.get(botId);
+        // 未找到符合bot的Controller
+        if (mappingInfoList == null || mappingInfoList.isEmpty()) {
+            return null;
+        }
         EventMappingAnnotationInfo bestMappingInfo = getBestMappingInfo(ms, mappingInfoList);
 
         if (bestMappingInfo == null) {

@@ -1,13 +1,13 @@
 package io.github.jiusiz.factory;
 
+import java.io.*;
+
 import io.github.jiusiz.properties.BotProperties;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
-
-import java.io.*;
 
 /**
  * @author jiusiz
@@ -30,7 +30,7 @@ public abstract class SimpleBotFactory {
         final String finalDevice = device;
         return BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {{
             // 配置登录设备信息
-            if (StringUtils.hasText(finalDevice) && finalDevice.contains("deviceInfoVersion")) {
+            if (StringUtils.hasText(finalDevice) && !finalDevice.contains("deviceInfoVersion")) {
                 loadDeviceInfoJson(finalDevice);
             } else if (StringUtils.hasText(botProperties.getDevice())) {
                 fileBasedDeviceInfo(botProperties.getDevice());

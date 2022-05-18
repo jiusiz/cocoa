@@ -12,7 +12,6 @@ import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
 
 /**
  * @author jiusiz
@@ -26,7 +25,6 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     @Override
     public void afterPropertiesSet() throws Exception {
         initHandlerMethods();
-        System.out.println("InitializingBean的方法调用完成。。。");
     }
 
     /**
@@ -36,25 +34,23 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         ApplicationContext context = getApplicationContext();
         String[] beanNames = context.getBeanNamesForType(Object.class);
         for (String beanName : beanNames) {
-            Class<?> beanType = context.getType(beanName);
-            if (beanType != null && isHandler(beanType)) {
-                processBean(beanType);
+            Object bean = context.getBean(beanName);
+            if (isHandler(bean.getClass())) {
+                processBean(bean);
             }
         }
     }
 
     /**
      * 处理bean，将带有注解的方法封装为映射信息
-     * @param beanType bean的class
+     * @param bean bean
      */
-    private void processBean(Class<?> beanType) {
-        Assert.notNull(beanType, "beanType require not null");
-
-        Method[] methods = beanType.getDeclaredMethods();
+    private void processBean(Object bean) {
+        Method[] methods = bean.getClass().getDeclaredMethods();
         for (Method method : methods) {
             if (isHandlerMethod(method)) {
-                EventMappingAnnotationInfo eventMappingAnnotationInfo = createMessageEventInfo(method, beanType);
-                registerHandlerMethod(eventMappingAnnotationInfo, method, beanType);
+                EventMappingAnnotationInfo eventMappingAnnotationInfo = createMessageEventInfo(method, bean.getClass());
+                registerHandlerMethod(eventMappingAnnotationInfo, method, bean);
             }
         }
 
@@ -64,10 +60,10 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
      * 将bean封装为HandlerMethod
      * @param eventMappingAnnotationInfo 封装的注解映射
      * @param method 要探测方法
-     * @param beanType bean的class
+     * @param bean bean
      */
-    private void registerHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo, Method method, Class<?> beanType) {
-        HandlerMethod handlerMethod = new HandlerMethod(beanType, method);
+    private void registerHandlerMethod(EventMappingAnnotationInfo eventMappingAnnotationInfo, Method method, Object bean) {
+        HandlerMethod handlerMethod = new HandlerMethod(bean, method);
         handlerMethodCenter.put(eventMappingAnnotationInfo, handlerMethod);
     }
 
@@ -80,11 +76,11 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     protected abstract EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
-     * 判断是否为需要的处理器
-     * @param type 处理器类型
+     * 判断bean是否为需要的处理器
+     * @param beanType bean的class
      * @return 是否为需要的
      */
-    protected abstract boolean isHandler(Class<?> type);
+    protected abstract boolean isHandler(Class<?> beanType);
 
     /**
      * 是否为需要的处理方法

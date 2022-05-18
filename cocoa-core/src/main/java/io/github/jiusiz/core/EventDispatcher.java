@@ -67,6 +67,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     /**
      * 实际的调度方法
+     * @param event 事件
      */
     private void dispatch(Event event) {
         Object handler = getHandler(event);
@@ -99,6 +100,8 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     /**
      * 根据事件获取处理器
+     * @param event 事件
+     * @return 获得到的处理器
      */
     private Object getHandler(Event event) {
         if (handlerMappings != null) {

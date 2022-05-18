@@ -1,5 +1,10 @@
 package io.github.jiusiz;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import io.github.jiusiz.core.BotContainer;
 import io.github.jiusiz.core.EventDispatcher;
 import io.github.jiusiz.core.context.SingleBotContainer;
@@ -45,6 +50,14 @@ public class CocoaAutoConfiguration {
     @ConditionalOnMissingBean
     public EventDispatcher eventDispatcher() {
         return new EventDispatcher();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ThreadPoolExecutor threadPoolExecutor() {
+        int size = botProperties.getQq().size();
+        BlockingQueue<Runnable> bq = new LinkedBlockingDeque<>();
+        return new ThreadPoolExecutor(size, size * 2, 10, TimeUnit.MINUTES, bq);
     }
 
 }

@@ -1,6 +1,7 @@
 package io.github.jiusiz.core;
 
 import net.mamoe.mirai.event.Event;
+import org.springframework.lang.Nullable;
 
 /**
  * @author jiusiz
@@ -13,5 +14,6 @@ public interface HandlerMapping {
      * @param event 事件
      * @return 处理器
      */
+    @Nullable
     Object getHandler(Event event);
 }

@@ -1,11 +1,11 @@
 package io.github.jiusiz.core;
 
+import java.util.Objects;
+
 import io.github.jiusiz.core.exception.EqualsControllerException;
 import net.mamoe.mirai.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 /**
  * @author jiusiz
@@ -89,24 +89,25 @@ public class EventMappingAnnotationInfo implements Comparable<EventMappingAnnota
 
     @Override
     public int compareTo(@NotNull EventMappingAnnotationInfo info) {
-        if (this.equals(info)){
+        if (this.equals(info)) {
             throw new EqualsControllerException("相同的控制器，无法确定使用哪一个");
         }
-        if (Objects.equals(this.sort, info.sort)){
-            if (this.content.length() > info.content.length()){
-                this.sort--;
+        int thisSort = this.sort;
+        if (Objects.equals(this.sort, info.sort)) {
+            if (this.content.length() > info.content.length()) {
+                thisSort++;
             }
         }
-        if (Objects.equals(this.sort, info.sort)){
-            if (this.sender > info.sender){
-                this.sort--;
+        if (Objects.equals(this.sort, info.sort)) {
+            if (this.sender > info.sender) {
+                thisSort++;
             }
         }
-        if (Objects.equals(this.sort, info.sort)){
-            if (this.senderName.length() > info.senderName.length()){
-                this.sort--;
+        if (Objects.equals(this.sort, info.sort)) {
+            if (this.senderName.length() > info.senderName.length()) {
+                thisSort++;
             }
         }
-        return this.sort - info.sort;
+        return info.sort - thisSort;
     }
 }

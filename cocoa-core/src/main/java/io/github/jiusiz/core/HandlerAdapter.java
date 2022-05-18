@@ -11,7 +11,18 @@ import net.mamoe.mirai.event.Event;
  */
 public interface HandlerAdapter {
 
+    /**
+     * 是否支持执行此handler
+     * @param handler 处理器
+     * @return 是否支持
+     */
     boolean supports(Object handler);
 
+    /**
+     * 执行处理器，并收集返回数据
+     * @param event 事件
+     * @param handler 处理器
+     * @return 事件返回信息
+     */
     EventModel handle(Event event, Object handler);
 }
