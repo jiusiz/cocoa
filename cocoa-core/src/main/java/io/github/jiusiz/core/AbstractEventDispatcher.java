@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
+ * 为子类提供ApplicationContext的装配和事件监听功能
  * @author jiusiz
  * @version 0.1.0
  * @since 2022-05-08 下午 7:43

@@ -35,6 +35,9 @@ public class EventDispatcher extends AbstractEventDispatcher {
                 BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
 
         if (!matchingBeans.isEmpty()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("已经在容器中找到HandlerMapping，默认将不再生效");
+            }
             this.handlerMappings = new ArrayList<>(matchingBeans.values());
         }
         if (handlerMappings == null) {
@@ -49,6 +52,9 @@ public class EventDispatcher extends AbstractEventDispatcher {
                 BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
 
         if (!matchingBeans.isEmpty()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("已经在容器中找到HandlerMapping，默认将不再生效");
+            }
             this.handlerAdapters = new ArrayList<>(matchingBeans.values());
         }
 
@@ -62,7 +68,21 @@ public class EventDispatcher extends AbstractEventDispatcher {
      * @param event 事件
      */
     public void doService(Event event) {
+
+        if (passInternalEvent(event.getClass().getName())) {
+            return;
+        }
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("接受到事件:" + event.getClass());
+        }
+
         dispatch(event);
+    }
+
+    private boolean passInternalEvent(String className) {
+        // 部分需要放行的事件
+        return className.startsWith("net.mamoe.mirai.internal.network.protocol");
     }
 
     /**
@@ -87,7 +107,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
         HandlerAdapter ha = getAdapter(handler);
 
         if (ha == null) {
-            logger.warn("未找到适配器处理此方法" + handler.getClass());
+            logger.warn("未找到适配器处理此方法:" + handler.getClass());
             return;
         }
 

@@ -22,10 +22,12 @@ public abstract class SimpleBotFactory {
 
     public static Bot createBot(Long qq, String password, BotProperties botProperties) {
         String device = null;
-        try {
-            device = readStringByClassPath(botProperties.getDevice());
-        } catch (IOException ignored) {
-            // 没有读取到，我们使用默认的device
+        if (botProperties.getDevice() != null) {
+            try {
+                device = readStringFromClassPath(botProperties.getDevice());
+            } catch (IOException ignored) {
+                // 没有读取到，我们使用默认的device
+            }
         }
         final String finalDevice = device;
         return BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {{
@@ -54,7 +56,7 @@ public abstract class SimpleBotFactory {
         }});
     }
 
-    private static String readStringByClassPath(String resource) throws IOException {
+    private static String readStringFromClassPath(String resource) throws IOException {
 
         ClassPathResource classPathResource = new ClassPathResource(resource);
         if (!classPathResource.exists()) {
@@ -63,14 +65,10 @@ public abstract class SimpleBotFactory {
         return readInputStream(classPathResource.getInputStream());
     }
 
-    private static String readInputStream(InputStream in) {
+    private static String readInputStream(InputStream in) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
         byte[] bytes;
-        try {
-            bytes = bufferedInputStream.readAllBytes();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        bytes = bufferedInputStream.readAllBytes();
         return new String(bytes);
     }
 
