@@ -13,6 +13,7 @@ import io.github.jiusiz.properties.BotProperties;
 import io.github.jiusiz.properties.QQAccount;
 import net.mamoe.mirai.Bot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +24,11 @@ import org.springframework.context.annotation.Configuration;
  * @version 0.1.0
  * @since 2022-02-27 上午 1:04
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({BotProperties.class})
 public class CocoaAutoConfiguration {
+
+    public static final String QQ_LOGIN_THREAD_POOL_EXECUTOR = "io.github.jiusiz.loginThreadPoolExecutor";
 
     private final BotProperties botProperties;
 
@@ -48,12 +51,13 @@ public class CocoaAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(BotContainer.class)
     public EventDispatcher eventDispatcher() {
         return new EventDispatcher();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
+    @Bean(QQ_LOGIN_THREAD_POOL_EXECUTOR)
+    @ConditionalOnBean(BotContainer.class)
     public ThreadPoolExecutor threadPoolExecutor() {
         int size = botProperties.getQq().size();
         BlockingQueue<Runnable> bq = new LinkedBlockingDeque<>();

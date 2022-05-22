@@ -54,6 +54,9 @@ java {
     withJavadocJar()
 }
 
+val neName: String by project
+val nePassword: String by project
+
 publishing {
     publications {
         create<MavenPublication>("-cocoa-") {
@@ -62,9 +65,47 @@ publishing {
             this.version = "${project.version}"
 
             from(components["java"])
+            pom {
+                name.set(project.name)
+                description.set("cocoa -- annotation style QQ robot framework")
+                url.set("https://github.com/jiusiz/cocoa")
+                licenses {
+                    license {
+                        name.set("GNU AGPLv3")
+                        url.set("https://github.com/jiusiz/cocoa/blob/main/LICENSE")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("jiusiz")
+                        name.set("jiusiz")
+                        email.set("jiusiz@outlook.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/jiusiz/cocoa.git")
+                    developerConnection.set("https://github.com/jiusiz")
+                    url.set("https://github.com/jiusiz/cocoa")
+                }
+            }
         }
         repositories {
-            mavenLocal()
+            maven {
+                name = "-sonatype-"
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = neName
+                    password = nePassword
+                }
+            }
+            maven {
+                name = "-sonatypeSnapshot-"
+                url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                credentials {
+                    username = neName
+                    password = nePassword
+                }
+            }
         }
     }
 }

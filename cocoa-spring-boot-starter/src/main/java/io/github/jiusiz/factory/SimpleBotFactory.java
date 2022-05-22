@@ -1,11 +1,18 @@
 package io.github.jiusiz.factory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
+import io.github.jiusiz.exception.DeviceInfoReadException;
 import io.github.jiusiz.properties.BotProperties;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.utils.BotConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
@@ -16,32 +23,80 @@ import org.springframework.util.StringUtils;
  */
 public abstract class SimpleBotFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(SimpleBotFactory.class);
+
     public static Bot createBot(Long qq, String password) {
         return BotFactory.INSTANCE.newBot(qq, password);
     }
 
     public static Bot createBot(Long qq, String password, BotProperties botProperties) {
-        String device = null;
-        if (botProperties.getDevice() != null) {
-            try {
-                device = readStringFromClassPath(botProperties.getDevice());
-            } catch (IOException ignored) {
-                // 没有读取到，我们使用默认的device
+        String specificDeviceJson = null;
+        boolean useRandomDevice = true;
+        boolean specificDevice = false;
+        String canonicalPath = null;
+
+        if (StringUtils.hasText(botProperties.getDevice())) {
+            File deviceFile = new File("." + File.separator + botProperties.getDevice());
+            if (deviceFile.exists()) {
+                // 如果在当前文件夹下，读取
+                try (FileInputStream in = new FileInputStream(deviceFile)) {
+                    String json = readInputStream(in);
+                    if (!StringUtils.hasText(json)) {
+                        logger.warn("提供的device没有内容！将使用随机生成的device.json");
+                    } else if (!json.contains("deviceInfoVersion")) {
+                        useRandomDevice = false;
+                        specificDevice = true;
+                        specificDeviceJson = json;
+                    } else {
+                        useRandomDevice = false;
+                        canonicalPath = deviceFile.getCanonicalPath();
+                    }
+                } catch (IOException e) {
+                    throw new DeviceInfoReadException(e);
+                }
+            } else {
+                // 不在当前文件夹下，可能在类路径里
+                ClassPathResource deviceResource = new ClassPathResource(botProperties.getDevice());
+                if (deviceResource.exists()) {
+                    // 存在于类路径下
+                    try {
+                        InputStream inputStream = deviceResource.getInputStream();
+                        String json = readInputStream(inputStream);
+                        if (!StringUtils.hasText(json)) {
+                            logger.warn("提供的device没有内容！将使用随机生成的device.json");
+                        } else if (!json.contains("deviceInfoVersion")) {
+                            specificDevice = true;
+                            specificDeviceJson = json;
+                            useRandomDevice = false;
+                        } else {
+                            useRandomDevice = false;
+                            canonicalPath = deviceResource.getFile().getCanonicalPath();
+                        }
+                    } catch (IOException e) {
+                        throw new DeviceInfoReadException(e);
+                    }
+                }
             }
         }
-        final String finalDevice = device;
-        return BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {{
+
+        Bot bot;
+        final boolean finalUseRandomDevice = useRandomDevice;
+        final boolean finalSpecificDevice = specificDevice;
+        final String finalSpecificDeviceJson = specificDeviceJson;
+        final String finalCanonicalPath = canonicalPath;
+        bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {{
             // 配置登录设备信息
-            if (StringUtils.hasText(finalDevice) && !finalDevice.contains("deviceInfoVersion")) {
-                loadDeviceInfoJson(finalDevice);
-            } else if (StringUtils.hasText(botProperties.getDevice())) {
-                fileBasedDeviceInfo(botProperties.getDevice());
-            } else {
+            if (finalUseRandomDevice) {
                 fileBasedDeviceInfo();
+            } else if (finalSpecificDevice) {
+                loadDeviceInfoJson(finalSpecificDeviceJson);
+            } else {
+                fileBasedDeviceInfo(finalCanonicalPath);
             }
+
             // 配置缓存目录
             if (StringUtils.hasText(botProperties.getCache())) {
-                setCacheDir(new File(botProperties.getCache() + qq));
+                setCacheDir(new File(botProperties.getCache() + File.separator + qq));
             }
             // 配置是否自动重连
             if (botProperties.getAutoReconnection()) {
@@ -54,21 +109,12 @@ public abstract class SimpleBotFactory {
                 enableContactCache();
             }
         }});
-    }
-
-    private static String readStringFromClassPath(String resource) throws IOException {
-
-        ClassPathResource classPathResource = new ClassPathResource(resource);
-        if (!classPathResource.exists()) {
-            throw new FileNotFoundException("文件：" + resource + " 不存在");
-        }
-        return readInputStream(classPathResource.getInputStream());
+        return bot;
     }
 
     private static String readInputStream(InputStream in) throws IOException {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(in);
-        byte[] bytes;
-        bytes = bufferedInputStream.readAllBytes();
+        byte[] bytes = bufferedInputStream.readAllBytes();
         return new String(bytes);
     }
 

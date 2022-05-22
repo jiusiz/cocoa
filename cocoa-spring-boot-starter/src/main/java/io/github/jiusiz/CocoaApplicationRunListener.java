@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
+ * 监听spring boot启动，启动完成后进行自动登录所有机器人
  * @author jiusiz
  * @version 0.1.0
  * @since 0.1.0 2022-05-18 下午 2:27
