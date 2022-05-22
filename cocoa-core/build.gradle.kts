@@ -12,7 +12,7 @@ plugins {
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-    api("net.mamoe:mirai-core:2.10.3")
+    api("net.mamoe:mirai-core:2.11.0")
     api("com.google.code.findbugs:annotations:3.0.1") // 消除警告
 
     implementation(kotlin("stdlib"))
