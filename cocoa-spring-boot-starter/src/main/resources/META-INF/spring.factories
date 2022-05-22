@@ -5,3 +5,8 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 # Application Run Listener
 org.springframework.boot.SpringApplicationRunListener=\
   io.github.jiusiz.CocoaApplicationRunListener
+
+# Failure analyzers
+org.springframework.boot.diagnostics.FailureAnalyzer=\
+  io.github.jiusiz.analyzer.CocoaFailureAnalyzer,\
+  io.github.jiusiz.analyzer.BotCreateFailureAnalyzer
