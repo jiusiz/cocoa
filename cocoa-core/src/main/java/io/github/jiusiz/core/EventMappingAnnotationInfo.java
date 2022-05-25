@@ -19,7 +19,7 @@ package io.github.jiusiz.core;
 
 import java.util.Objects;
 
-import io.github.jiusiz.core.exception.EqualsControllerException;
+import io.github.jiusiz.core.exception.EqualsMappingException;
 import net.mamoe.mirai.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
@@ -107,7 +107,7 @@ public class EventMappingAnnotationInfo implements Comparable<EventMappingAnnota
     @Override
     public int compareTo(@NotNull EventMappingAnnotationInfo info) {
         if (this.equals(info)) {
-            throw new EqualsControllerException("相同的控制器，无法确定使用哪一个");
+            throw new EqualsMappingException("发现有两个同样的方法映射信息，无法确定使用哪一个");
         }
         int thisSort = this.sort;
         if (Objects.equals(this.sort, info.sort)) {

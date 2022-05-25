@@ -40,7 +40,7 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     protected final Map<EventMappingAnnotationInfo, HandlerMethod> handlerMethodCenter = new HashMap<>();
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         initHandlerMethods();
     }
 

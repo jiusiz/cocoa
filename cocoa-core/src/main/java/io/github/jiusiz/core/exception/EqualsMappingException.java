@@ -15,32 +15,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.annotation.method;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import net.mamoe.mirai.event.Event;
+package io.github.jiusiz.core.exception;
 
 /**
+ * 相同的映射信息异常
  * @author jiusiz
  * @version 0.1.0
- * @since 2022-05-11 下午 9:16
+ * @since 2022-05-14 下午 9:30
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface EventMapping {
+public class EqualsMappingException extends RuntimeException{
+    public EqualsMappingException() {
+        super();
+    }
 
-    String content() default "";
+    public EqualsMappingException(String message) {
+        super(message);
+    }
 
-    long sender() default 0;
+    public EqualsMappingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    String senderName() default "";
+    public EqualsMappingException(Throwable cause) {
+        super(cause);
+    }
 
-    Class<?> event() default Event.class;
-
+    protected EqualsMappingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

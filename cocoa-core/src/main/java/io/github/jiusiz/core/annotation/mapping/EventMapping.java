@@ -15,31 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.exception;
+package io.github.jiusiz.core.annotation.mapping;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import net.mamoe.mirai.event.Event;
 
 /**
+ * 事件的映射注解
  * @author jiusiz
  * @version 0.1.0
- * @since 2022-05-14 下午 9:30
+ * @since 2022-05-11 下午 9:16
  */
-public class EqualsControllerException extends RuntimeException{
-    public EqualsControllerException() {
-        super();
-    }
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface EventMapping {
 
-    public EqualsControllerException(String message) {
-        super(message);
-    }
+    String content() default "";
 
-    public EqualsControllerException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    long sender() default 0;
 
-    public EqualsControllerException(Throwable cause) {
-        super(cause);
-    }
+    String senderName() default "";
 
-    protected EqualsControllerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+    Class<? extends Event> event() default Event.class;
+
 }

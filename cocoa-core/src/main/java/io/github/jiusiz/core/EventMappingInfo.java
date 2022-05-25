@@ -21,8 +21,10 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.User;
+import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.MessageChain;
+import org.springframework.lang.Nullable;
 
 /**
  * 事件映射信息
@@ -31,16 +33,19 @@ import net.mamoe.mirai.message.data.MessageChain;
  * @since 2022-05-12 下午 9:16
  */
 public class EventMappingInfo {
-    private Class<?> type;
-    private MessageEventInfo messageEventInfo;
+
+    private final Event event;
 
     public EventMappingInfo(MessageEvent event) {
-        this.type = event.getClass();
-        this.messageEventInfo = new MessageEventInfo(event);
+        this.event = event;
     }
 
-    public MessageEventInfo getMessageEventInfo(){
-        return this.messageEventInfo;
+    @Nullable
+    public MessageEventInfo getMessageEventInfo() {
+        if (MessageEvent.class.isAssignableFrom(this.event.getClass())) {
+            return new MessageEventInfo((MessageEvent) event);
+        }
+        return null;
     }
 
     public class MessageEventInfo {
@@ -99,7 +104,7 @@ public class EventMappingInfo {
          * 获取机器人的id
          * @return 机器人的id
          */
-        public Long getBotId(){
+        public Long getBotId() {
             return this.bot.getId();
         }
     }

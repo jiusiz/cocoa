@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.annotation.method;
+package io.github.jiusiz.core.annotation.mapping;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

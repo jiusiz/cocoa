@@ -52,9 +52,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
                 BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerMapping.class, true, false);
 
         if (!matchingBeans.isEmpty()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("已经在容器中找到HandlerMapping，默认将不再生效");
-            }
+            logger.info("已经在容器中找到HandlerMapping，默认将不再生效");
             this.handlerMappings = new ArrayList<>(matchingBeans.values());
         }
         if (handlerMappings == null) {
@@ -69,9 +67,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
                 BeanFactoryUtils.beansOfTypeIncludingAncestors(context, HandlerAdapter.class, true, false);
 
         if (!matchingBeans.isEmpty()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("已经在容器中找到HandlerMapping，默认将不再生效");
-            }
+            logger.debug("已经在容器中找到HandlerMapping，默认将不再生效");
             this.handlerAdapters = new ArrayList<>(matchingBeans.values());
         }
 
@@ -132,6 +128,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
             ev = ha.handle(event, handler);
         } catch (Exception e) {
             e.printStackTrace();
+            // TODO: 2022-5-25 异常处理器
         }
     }
 
@@ -163,19 +160,24 @@ public class EventDispatcher extends AbstractEventDispatcher {
         return null;
     }
 
-    protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
+    /**
+     * 在容器中注册bean
+     * @param clazz bean的类型
+     * @return bean
+     */
+    protected <T> T registerBean(Class<T> clazz) {
         return context.getAutowireCapableBeanFactory().createBean(clazz);
     }
 
     private List<HandlerMapping> getDefaultHandlerMappings() {
         List<HandlerMapping> defaultHandlerMappings = new ArrayList<>();
-        defaultHandlerMappings.add((HandlerMapping) createDefaultStrategy(context, MessageEventHandlerMapping.class));
+        defaultHandlerMappings.add(registerBean(MessageEventHandlerMapping.class));
         return defaultHandlerMappings;
     }
 
     private List<HandlerAdapter> getDefaultHandlerAdapters() {
         List<HandlerAdapter> defaultHandlerAdapters = new ArrayList<>();
-        defaultHandlerAdapters.add((HandlerAdapter) createDefaultStrategy(context, MessageEventHandlerAdapter.class));
+        defaultHandlerAdapters.add(registerBean(MessageEventHandlerAdapter.class));
         return defaultHandlerAdapters;
     }
 

@@ -27,7 +27,7 @@ import java.util.Map;
 import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.EventMappingInfo;
 import io.github.jiusiz.core.annotation.EventController;
-import io.github.jiusiz.core.annotation.method.EventMapping;
+import io.github.jiusiz.core.annotation.mapping.EventMapping;
 import io.github.jiusiz.core.exception.AnnotationNotFoundException;
 import io.github.jiusiz.core.method.HandlerMethod;
 import net.mamoe.mirai.event.Event;
@@ -49,6 +49,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
     /**
      * 是否为本类需要的处理器
      * @param beanType 探测到的bean的class
+     * @return 是否需要
      */
     @Override
     protected boolean isHandler(Class<?> beanType) {
@@ -57,6 +58,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     /**
      * 是否为本类需要的处理器方法
+     * @param method 探测到的方法
      */
     @Override
     protected boolean isHandlerMethod(Method method) {
@@ -71,7 +73,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
      */
     @Override
     protected EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType) {
-        // 获取类上面的EventController
+        // 获取类EventController注解信息
         AnnotationAttributes eventController = AnnotatedElementUtils
                 .getMergedAnnotationAttributes(beanType, EventController.class);
 
@@ -115,6 +117,9 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
         EventMappingInfo info = getEventMappingInfo(ms);
 
         EventMappingInfo.MessageEventInfo messageEventInfo = info.getMessageEventInfo();
+        if (messageEventInfo == null) {
+            return null;
+        }
         Long botId = messageEventInfo.getBotId();
         List<EventMappingAnnotationInfo> mappingInfoList = this.botIdMap.get(botId);
         // 未找到符合bot的Controller
@@ -135,7 +140,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
      * @param event 事件
      * @return 是否为消息事件
      */
-    protected boolean isMessageEvent(Event event) {
+    private boolean isMessageEvent(Event event) {
         return event instanceof MessageEvent;
     }
 
@@ -144,7 +149,7 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
      * @param messageEvent 消息事件
      * @return 事件的映射信息
      */
-    protected EventMappingInfo getEventMappingInfo(MessageEvent messageEvent) {
+    private EventMappingInfo getEventMappingInfo(MessageEvent messageEvent) {
         return new EventMappingInfo(messageEvent);
     }
 
