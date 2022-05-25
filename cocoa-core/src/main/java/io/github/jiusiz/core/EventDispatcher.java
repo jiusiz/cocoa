@@ -163,6 +163,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
     /**
      * 在容器中注册bean
      * @param clazz bean的类型
+     * @param <T> bean类型
      * @return bean
      */
     protected <T> T registerBean(Class<T> clazz) {
