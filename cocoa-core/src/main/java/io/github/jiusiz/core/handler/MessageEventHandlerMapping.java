@@ -28,6 +28,7 @@ import io.github.jiusiz.core.EventMappingAnnotationInfo;
 import io.github.jiusiz.core.EventMappingInfo;
 import io.github.jiusiz.core.annotation.EventController;
 import io.github.jiusiz.core.annotation.mapping.EventMapping;
+import io.github.jiusiz.core.annotation.mapping.MessageMapping;
 import io.github.jiusiz.core.exception.AnnotationNotFoundException;
 import io.github.jiusiz.core.method.HandlerMethod;
 import net.mamoe.mirai.event.Event;
@@ -78,18 +79,18 @@ public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
                 .getMergedAnnotationAttributes(beanType, EventController.class);
 
         // 获取方法EventMapping注解信息
-        AnnotationAttributes eventMapping = AnnotatedElementUtils
-                .getMergedAnnotationAttributes(method, EventMapping.class);
+        AnnotationAttributes messageMapping = AnnotatedElementUtils
+                .getMergedAnnotationAttributes(method, MessageMapping.class);
 
-        if (eventController == null || eventMapping == null) {
+        if (eventController == null || messageMapping == null) {
             throw new AnnotationNotFoundException("获取注解信息失败");
         }
 
         Long botId = (Long) eventController.get("botId");
-        String content = eventMapping.getString("content");
-        Long sender = (Long) eventMapping.get("sender");
-        String senderName = eventMapping.getString("senderName");
-        Class<?> event = eventMapping.getClass("event");
+        String content = messageMapping.getString("content");
+        Long sender = (Long) messageMapping.get("sender");
+        String senderName = messageMapping.getString("senderName");
+        Class<?> event = messageMapping.getClass("event");
 
         EventMappingAnnotationInfo info = new EventMappingAnnotationInfo(content, sender, senderName, event);
         // 加入botIdMap中

@@ -36,12 +36,6 @@ import net.mamoe.mirai.event.Event;
 @Documented
 public @interface EventMapping {
 
-    String content() default "";
-
-    long sender() default 0;
-
-    String senderName() default "";
-
     Class<? extends Event> event() default Event.class;
 
 }

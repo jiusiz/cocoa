@@ -34,7 +34,7 @@ import org.springframework.core.annotation.AliasFor;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@EventMapping(event = GroupMessageEvent.class)
+@MessageMapping(event = GroupMessageEvent.class)
 public @interface GroupMessageMapping {
 
     @AliasFor(annotation = EventMapping.class)

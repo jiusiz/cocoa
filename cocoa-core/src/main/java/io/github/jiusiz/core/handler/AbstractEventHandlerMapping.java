@@ -35,7 +35,8 @@ import org.springframework.lang.Nullable;
  * @version 0.1.0
  * @since 2022-05-10 下午 3:20
  */
-public abstract class AbstractEventHandlerMapping extends ApplicationContextSupport implements InitializingBean, HandlerMapping {
+public abstract class AbstractEventHandlerMapping extends ApplicationContextSupport
+        implements InitializingBean, HandlerMapping {
 
     protected final Map<EventMappingAnnotationInfo, HandlerMethod> handlerMethodCenter = new HashMap<>();
 
@@ -59,6 +60,13 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
     }
 
     /**
+     * 判断bean是否为需要的处理器
+     * @param beanType bean的class
+     * @return 是否为需要的
+     */
+    protected abstract boolean isHandler(Class<?> beanType);
+
+    /**
      * 处理bean，将带有注解的方法封装为映射信息
      * @param bean bean
      */
@@ -70,8 +78,22 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
                 registerHandlerMethod(eventMappingAnnotationInfo, method, bean);
             }
         }
-
     }
+
+    /**
+     * 是否为需要的处理方法
+     * @param method 方法
+     * @return 是否为需要的方法
+     */
+    protected abstract boolean isHandlerMethod(Method method);
+
+    /**
+     * 创建映射信息
+     * @param method 方法
+     * @param beanType bean类型
+     * @return 封装好的注解信息
+     */
+    protected abstract EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType);
 
     /**
      * 将bean封装为HandlerMethod
@@ -83,28 +105,6 @@ public abstract class AbstractEventHandlerMapping extends ApplicationContextSupp
         HandlerMethod handlerMethod = new HandlerMethod(bean, method);
         handlerMethodCenter.put(eventMappingAnnotationInfo, handlerMethod);
     }
-
-    /**
-     * 创建映射信息
-     * @param method 方法
-     * @param beanType bean类型
-     * @return 封装好的注解信息
-     */
-    protected abstract EventMappingAnnotationInfo createMessageEventInfo(Method method, Class<?> beanType);
-
-    /**
-     * 判断bean是否为需要的处理器
-     * @param beanType bean的class
-     * @return 是否为需要的
-     */
-    protected abstract boolean isHandler(Class<?> beanType);
-
-    /**
-     * 是否为需要的处理方法
-     * @param method 方法
-     * @return 是否为需要的方法
-     */
-    protected abstract boolean isHandlerMethod(Method method);
 
     @Override
     public HandlerMethod getHandler(Event event) {
