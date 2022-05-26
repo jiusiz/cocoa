@@ -18,7 +18,7 @@ dependencies {
     api(project(":cocoa-core"))
 }
 
-tasks.withType<JavaCompile>{
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
@@ -49,7 +49,7 @@ val nePassword: String by project
 
 publishing {
     publications {
-        create<MavenPublication>("-maven-") {
+        create<MavenPublication>("-starter-") {
 
             from(components["java"])
             pom {
@@ -95,4 +95,8 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    sign(publishing.publications)
 }

@@ -27,7 +27,7 @@ maven
 gradle
 
 ```kotlin
-implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.1.0-SNAPSHOT")
+implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.1.0")
 ```
 
 ### 3.编写配置文件

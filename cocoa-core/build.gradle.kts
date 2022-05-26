@@ -59,7 +59,7 @@ val nePassword: String by project
 
 publishing {
     publications {
-        create<MavenPublication>("-cocoa-") {
+        create<MavenPublication>("maven") {
             groupId = "${project.group}"
             artifactId = project.name
             this.version = "${project.version}"
@@ -91,7 +91,7 @@ publishing {
         }
         repositories {
             maven {
-                name = "-sonatype-"
+                name = "sonatype"
                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = neName
@@ -99,7 +99,7 @@ publishing {
                 }
             }
             maven {
-                name = "-sonatypeSnapshot-"
+                name = "sonatypeSnapshot"
                 url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 credentials {
                     username = neName
@@ -108,4 +108,8 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    sign(publishing.publications)
 }
