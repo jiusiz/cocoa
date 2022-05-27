@@ -37,13 +37,13 @@ import org.springframework.core.annotation.AliasFor;
 @MessageMapping(event = GroupMessageEvent.class)
 public @interface GroupMessageMapping {
 
-    @AliasFor(annotation = EventMapping.class)
+    @AliasFor(annotation = MessageMapping.class)
     String senderName() default "";
 
-    @AliasFor(annotation = EventMapping.class)
+    @AliasFor(annotation = MessageMapping.class)
     long sender() default 0;
 
-    @AliasFor(annotation = EventMapping.class)
+    @AliasFor(annotation = MessageMapping.class)
     String content() default "";
 
 }
