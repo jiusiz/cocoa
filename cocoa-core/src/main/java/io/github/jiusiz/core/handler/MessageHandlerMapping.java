@@ -22,8 +22,8 @@ import java.util.List;
 
 import io.github.jiusiz.core.AnnotationMappingInfo;
 import io.github.jiusiz.core.annotation.mapping.MessageMapping;
-import io.github.jiusiz.core.exception.AnnotationNotFoundException;
-import io.github.jiusiz.core.exception.EqualsMappingException;
+import io.github.jiusiz.core.exception.mapping.AnnotationNotFoundException;
+import io.github.jiusiz.core.exception.mapping.EqualsMappingException;
 import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.GroupMessageEvent;

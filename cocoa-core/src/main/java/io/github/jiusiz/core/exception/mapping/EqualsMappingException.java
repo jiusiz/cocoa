@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.exception;
+package io.github.jiusiz.core.exception.mapping;
+
+import io.github.jiusiz.core.exception.CreateMappingException;
 
 /**
  * 相同的映射信息异常
@@ -23,7 +25,7 @@ package io.github.jiusiz.core.exception;
  * @version 0.1.0
  * @since 2022-05-14 下午 9:30
  */
-public class EqualsMappingException extends RuntimeException {
+public class EqualsMappingException extends CreateMappingException {
 
     private String description1;
 

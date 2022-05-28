@@ -32,6 +32,7 @@ import org.springframework.lang.Nullable;
  * @version 0.1.0
  * @since 2022-05-12 下午 9:16
  */
+@Deprecated
 public class EventMappingInfo {
 
     private final Event event;

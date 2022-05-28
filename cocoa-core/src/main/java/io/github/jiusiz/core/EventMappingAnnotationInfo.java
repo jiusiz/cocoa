@@ -19,7 +19,7 @@ package io.github.jiusiz.core;
 
 import java.util.Objects;
 
-import io.github.jiusiz.core.exception.EqualsMappingException;
+import io.github.jiusiz.core.exception.mapping.EqualsMappingException;
 import net.mamoe.mirai.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
  * @version 0.1.0
  * @since 2022-05-13 下午 3:50
  */
+@Deprecated
 public class EventMappingAnnotationInfo implements Comparable<EventMappingAnnotationInfo> {
     private String content;
     private Long sender;

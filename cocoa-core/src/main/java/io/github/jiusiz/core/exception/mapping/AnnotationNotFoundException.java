@@ -15,14 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.exception;
+package io.github.jiusiz.core.exception.mapping;
+
+import io.github.jiusiz.core.exception.CreateMappingException;
 
 /**
  * @author jiusiz
  * @version 0.1.0
  * @since 2022-05-13 下午 4:50
  */
-public class AnnotationNotFoundException extends RuntimeException{
+public class AnnotationNotFoundException extends CreateMappingException {
     public AnnotationNotFoundException() {
         super();
     }

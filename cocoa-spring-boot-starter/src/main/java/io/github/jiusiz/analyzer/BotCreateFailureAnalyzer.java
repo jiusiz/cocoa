@@ -30,7 +30,7 @@ import org.springframework.boot.diagnostics.FailureAnalysis;
 public class BotCreateFailureAnalyzer extends AbstractFailureAnalyzer<BotCreateException> {
     @Override
     protected FailureAnalysis analyze(Throwable rootFailure, BotCreateException cause) {
-        if (DeviceInfoReadException.class.equals(cause.getClass())) {
+        if (cause instanceof DeviceInfoReadException) {
             return new FailureAnalysis("device信息读取错误\n异常信息：" + cause.getMessage(),
                     "请修改应用中的cocoa.device配置", cause);
         }

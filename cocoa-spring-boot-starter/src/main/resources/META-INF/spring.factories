@@ -8,5 +8,5 @@ org.springframework.boot.SpringApplicationRunListener=\
 
 # Failure analyzers
 org.springframework.boot.diagnostics.FailureAnalyzer=\
-  io.github.jiusiz.analyzer.CocoaFailureAnalyzer,\
+  io.github.jiusiz.analyzer.MappingCreateFailureAnalyzer,\
   io.github.jiusiz.analyzer.BotCreateFailureAnalyzer

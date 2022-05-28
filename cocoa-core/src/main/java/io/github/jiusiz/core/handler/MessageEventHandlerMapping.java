@@ -29,7 +29,7 @@ import io.github.jiusiz.core.EventMappingInfo;
 import io.github.jiusiz.core.annotation.EventController;
 import io.github.jiusiz.core.annotation.mapping.EventMapping;
 import io.github.jiusiz.core.annotation.mapping.MessageMapping;
-import io.github.jiusiz.core.exception.AnnotationNotFoundException;
+import io.github.jiusiz.core.exception.mapping.AnnotationNotFoundException;
 import io.github.jiusiz.core.method.HandlerMethod;
 import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.MessageEvent;

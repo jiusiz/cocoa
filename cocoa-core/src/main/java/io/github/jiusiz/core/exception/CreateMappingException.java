@@ -15,22 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.analyzer;
-
-import io.github.jiusiz.core.exception.EqualsMappingException;
-import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
-import org.springframework.boot.diagnostics.FailureAnalysis;
+package io.github.jiusiz.core.exception;
 
 /**
  * @author jiusiz
  * @version 0.1.0
- * @since 0.1.0 2022-05-21 上午 10:27
+ * @since 0.1.0 2022-05-28 下午 2:21
  */
-public class CocoaFailureAnalyzer extends AbstractFailureAnalyzer<EqualsMappingException> {
-
-    @Override
-    protected FailureAnalysis analyze(Throwable rootFailure, EqualsMappingException cause) {
-        return new FailureAnalysis("遇到了两个相同的控制器", "请将这两个相同的控制器更改为不同的", cause);
+public class CreateMappingException extends RuntimeException {
+    public CreateMappingException() {
+        super();
     }
 
+    public CreateMappingException(String message) {
+        super(message);
+    }
+
+    public CreateMappingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public CreateMappingException(Throwable cause) {
+        super(cause);
+    }
+
+    protected CreateMappingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
