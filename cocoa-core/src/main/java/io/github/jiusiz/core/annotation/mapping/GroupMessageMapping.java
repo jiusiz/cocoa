@@ -23,13 +23,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import org.springframework.core.annotation.AliasFor;
 
 /**
  * @author jiusiz
- * @version 0.1.0
- * @since 2022-05-11 下午 9:48
+ * @version 0.2.0
+ * @since 0.1.0 2022-05-11 下午 9:48
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -38,10 +39,16 @@ import org.springframework.core.annotation.AliasFor;
 public @interface GroupMessageMapping {
 
     @AliasFor(annotation = MessageMapping.class)
+    long sender() default 0;
+
+    @AliasFor(annotation = MessageMapping.class)
     String senderName() default "";
 
     @AliasFor(annotation = MessageMapping.class)
-    long sender() default 0;
+    long group() default 0;
+
+    @AliasFor(annotation = MessageMapping.class)
+    MemberPermission permission() default MemberPermission.MEMBER;
 
     @AliasFor(annotation = MessageMapping.class)
     String content() default "";

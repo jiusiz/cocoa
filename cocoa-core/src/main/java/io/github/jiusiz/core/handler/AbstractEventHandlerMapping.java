@@ -35,6 +35,7 @@ import org.springframework.lang.Nullable;
  * @version 0.1.0
  * @since 2022-05-10 下午 3:20
  */
+@Deprecated
 public abstract class AbstractEventHandlerMapping extends ApplicationContextSupport
         implements InitializingBean, HandlerMapping {
 

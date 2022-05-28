@@ -23,9 +23,20 @@ package io.github.jiusiz.core.exception;
  * @version 0.1.0
  * @since 2022-05-14 下午 9:30
  */
-public class EqualsMappingException extends RuntimeException{
+public class EqualsMappingException extends RuntimeException {
+
+    private String description1;
+
+    private String description2;
+
     public EqualsMappingException() {
         super();
+    }
+
+    public EqualsMappingException(String description1, String description2) {
+        super();
+        this.description1 = description1;
+        this.description2 = description2;
     }
 
     public EqualsMappingException(String message) {
@@ -42,5 +53,13 @@ public class EqualsMappingException extends RuntimeException{
 
     protected EqualsMappingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public String getDescription1() {
+        return description1;
+    }
+
+    public String getDescription2() {
+        return description2;
     }
 }

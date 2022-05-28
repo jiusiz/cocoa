@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.jiusiz.core.adapter.MessageEventHandlerAdapter;
-import io.github.jiusiz.core.handler.MessageEventHandlerMapping;
+import io.github.jiusiz.core.handler.MessageHandlerMapping;
 import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -30,8 +30,8 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * @author jiusiz
- * @version 0.1.0
- * @since 2022-05-07 下午 8:24
+ * @version 0.2.0
+ * @since 0.1.0 2022-05-07 下午 8:24
  */
 public class EventDispatcher extends AbstractEventDispatcher {
 
@@ -172,7 +172,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     private List<HandlerMapping> getDefaultHandlerMappings() {
         List<HandlerMapping> defaultHandlerMappings = new ArrayList<>();
-        defaultHandlerMappings.add(registerBean(MessageEventHandlerMapping.class));
+        defaultHandlerMappings.add(registerBean(MessageHandlerMapping.class));
         return defaultHandlerMappings;
     }
 

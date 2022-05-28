@@ -43,6 +43,7 @@ import org.springframework.util.StringUtils;
  * @version 0.1.0
  * @since 2022-05-09 下午 9:41
  */
+@Deprecated
 public class MessageEventHandlerMapping extends AbstractEventHandlerMapping {
 
     private final Map<Long, List<EventMappingAnnotationInfo>> botIdMap = new HashMap<>();

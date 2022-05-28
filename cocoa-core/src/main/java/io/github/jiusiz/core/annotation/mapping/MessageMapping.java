@@ -23,12 +23,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.event.events.MessageEvent;
 import org.springframework.core.annotation.AliasFor;
 
 /**
  * @author jiusiz
- * @version 0.1.0
+ * @version 0.2.0
  * @since 0.1.0 2022-05-25 上午 10:30
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -42,6 +43,10 @@ public @interface MessageMapping {
     long sender() default 0;
 
     String senderName() default "";
+
+    long group() default 0;
+
+    MemberPermission permission() default MemberPermission.MEMBER;
 
     @AliasFor(annotation = EventMapping.class)
     Class<? extends MessageEvent> event() default MessageEvent.class;
