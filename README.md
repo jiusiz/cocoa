@@ -73,7 +73,7 @@ public class HelloController {
 
 ### 6.进阶用法
 
-[点击转到进阶用法文档]()
+[点击转到进阶用法文档](https://github.com/jiusiz/cocoa/blob/0.1.x/Advanced.md)
 
 ## 声明
 
