@@ -6,7 +6,7 @@
 
 使用`@EventController`注解将类作为事件控制器，参与事件的响应。
 
-`botId`属性是必须要填写的，此id的机器人事件由这个控制器处理。
+`botId`属性是必须要填写的，表示`botId`机器人事件由这个控制器处理。
 
 在`@EventController`中合并了`@Component`，会将其加入到spring容器中，便于cocoa管理。
 
@@ -39,14 +39,25 @@ public class Xxx {
 
 不建议使用这种方式处理事件，尽量每一个方法只处理一个子类事件。
 
+#### 1.2.1 @MessageMapping
+现在可以使用`@MessageMapping`来处理消息事件
+
 你可以指定注解的属性值来改变处理的事件。
 
-- content：`String`类型，声明方法希望事件的消息正文和`content`匹配，使用正则模式匹配。
+如果多个注解都只有一个条件，那么将会按照以下的顺序进行排序，优先匹配。
+
+- group: `long`类型，声明方法希望处理的群号。
+- permission： `MemberPermission`枚举类型，声明方法希望处理的群员权限。
 - sender：`long`类型，声明方法希望处理的事件发送者id。
 - senderName：`String`类型，声明方法希望处理的事件发送者名字。
+- content：`String`类型，声明方法希望事件的消息正文和`content`匹配，使用正则模式匹配。
 - event：`Class<?>`类型，声明方法希望处理的事件类型。
 
 你可以使用下面的合成注解。
 
 - `@FriendMessageMapping`：希望处理事件的类型为好友消息事件。
 - `@GroupMessageMapping`：希望处理事件的类型为群消息事件。
+
+`@FriendMessageMapping` 与 `@MessageMapping(event = FriendMessageEvent.class)` 等价。
+
+`@GroupMessageMapping` 与 `@MessageMapping(event = GroupMessageEvent.class)` 等价。

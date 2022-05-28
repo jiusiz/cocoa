@@ -2,6 +2,8 @@
 
 注解开发风格的QQ机器人框架，类似Spring MVC的开发体验
 
+目前最新稳定版文档 -> [0.1.0](https://github.com/jiusiz/cocoa/tree/0.1.x#cocoa)
+
 ## 快速开始
 
 ### 1.创建Spring Boot项目
@@ -20,14 +22,14 @@ maven
 <dependency>
     <groupId>io.github.jiusiz</groupId>
     <artifactId>cocoa-spring-boot-starter</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
 </dependency>
 ```
 
 gradle
 
 ```kotlin
-implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.1.0")
+implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.2.0-SNAPSHOT")
 ```
 
 ### 3.编写配置文件
@@ -36,9 +38,9 @@ implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.1.0")
 
 ```yaml
 cocoa:
-qq:
-  - account: 机器人的QQ号
-    password: 机器人的明文密码
+  qq:
+    - account: 机器人的QQ号
+      password: 机器人的明文密码
 ```
 
 ### 4.编写事件Controller
@@ -73,7 +75,7 @@ public class HelloController {
 
 ### 6.进阶用法
 
-[点击转到进阶用法文档]()
+[点击转到进阶用法文档](https://github.com/jiusiz/cocoa/blob/main/Advanced.md)
 
 ## 声明
 
@@ -81,6 +83,6 @@ public class HelloController {
 
 ## 鸣谢
 
-[mirai](https://github.com/mamoe/mirai)
+[mirai 高效率 QQ 机器人支持库](https://github.com/mamoe/mirai)
 
-[spring-boot](https://github.com/spring-projects/spring-boot)
+[Spring Boot](https://github.com/spring-projects/spring-boot)
