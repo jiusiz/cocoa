@@ -36,9 +36,9 @@ implementation("io.github.jiusiz:cocoa-spring-boot-starter:0.1.0")
 
 ```yaml
 cocoa:
-qq:
-  - account: 机器人的QQ号
-    password: 机器人的明文密码
+  qq:
+    - account: 机器人的QQ号
+      password: 机器人的明文密码
 ```
 
 ### 4.编写事件Controller
