@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * @author jiusiz
@@ -44,19 +43,20 @@ public class HandlerMethod {
 
         this.bean = bean;
         this.method = method;
-        this.beanType = ClassUtils.getUserClass(bean);
+        this.beanType = bean.getClass();
+        // this.beanType = ClassUtils.getUserClass(bean);
         this.parameters = initParameters();
     }
 
     private MethodParameter[] initParameters() {
-        MethodParameter[] jmp = new MethodParameter[method.getParameterCount()];
+        MethodParameter[] methodParameters = new MethodParameter[method.getParameterCount()];
         Parameter[] ps = method.getParameters();
 
         for (int i = 0; i < ps.length; i++) {
             // 构造参数
-            jmp[i] = new MethodParameter(method, i, ps[i]);
+            methodParameters[i] = new MethodParameter(method, i, ps[i]);
         }
-        return jmp;
+        return methodParameters;
     }
 
     public Method getMethod() {

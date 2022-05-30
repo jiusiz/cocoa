@@ -34,6 +34,7 @@ import net.mamoe.mirai.event.Event;
  * @version 0.1.0
  * @since 0.1.0 2022-05-17 上午 10:30
  */
+@Deprecated
 public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
 
     private List<ArgumentResolver> argumentResolvers;
@@ -92,7 +93,6 @@ public class MessageEventHandlerAdapter extends AbstractHandlerMethodAdapter {
 
         EventModel eventModel = invokeMethod(handler, args);
         eventModel.setEventClass(event.getClass());
-        // TODO: 2022-5-17 这里是返回值处理器工作的地方
 
         return eventModel;
     }

@@ -21,28 +21,29 @@ import io.github.jiusiz.core.method.MethodParameter;
 import net.mamoe.mirai.event.Event;
 
 /**
- * 参数解析器接口
- * 用于解析执行方法的参数，只负责一个参数
+ * 从事件中解析目标参数
+ *
+ * 参数解析器只负责一个参数的解析
+ * 如果需要解析多个参数，需要多次使用
  * @author jiusiz
- * @version 0.1.0
- * @since 0.1.0 2022-05-17 下午 2:37
+ * @version 0.2.0
+ * @since 0.2.0 2022-05-30 下午 4:39
  */
-@Deprecated
-public interface ArgumentResolver {
-
+public interface HandlerMethodArgumentResolver {
     /**
      * 是否支持解析此参数
-     * @param parameter 参数
+     * @param event 当前事件
+     * @param parameter 当前方法的某一参数
      * @return 是否支持
      */
-    boolean supportsArgument(MethodParameter parameter);
+    boolean supports(Event event, MethodParameter parameter);
 
     /**
-     * 解析参数
-     * @param event 事件
-     * @param parameter 原参数
-     * @return 解析到的参数
+     * 解析此参数
+     * @param event 当前事件
+     * @param parameter 当前方法的某一参数
+     * @return 参数
      */
-    Object resolveArgument(Event event, MethodParameter parameter);
+    Object resolverArgument(Event event, MethodParameter parameter);
 
 }

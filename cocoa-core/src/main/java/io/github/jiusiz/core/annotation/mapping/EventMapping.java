@@ -36,6 +36,10 @@ import net.mamoe.mirai.event.Event;
 @Documented
 public @interface EventMapping {
 
+    /**
+     * 标注此方法需要监听的事件类型
+     * @return 事件类型
+     */
     Class<? extends Event> event() default Event.class;
 
 }

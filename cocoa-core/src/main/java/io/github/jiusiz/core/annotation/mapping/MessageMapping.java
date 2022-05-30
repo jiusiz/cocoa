@@ -38,14 +38,34 @@ import org.springframework.core.annotation.AliasFor;
 @EventMapping
 public @interface MessageMapping {
 
+    /**
+     * 正文的正则匹配
+     * @return 正则字符串
+     */
     String content() default "";
 
+    /**
+     * 发送人id
+     * @return 发送人id
+     */
     long sender() default 0;
 
+    /**
+     * 发送人昵称
+     * @return 发送人昵称
+     */
     String senderName() default "";
 
+    /**
+     * 群号
+     * @return 群号
+     */
     long group() default 0;
 
+    /**
+     * 发送人的权限
+     * @return 发送人的权限
+     */
     MemberPermission permission() default MemberPermission.MEMBER;
 
     @AliasFor(annotation = EventMapping.class)

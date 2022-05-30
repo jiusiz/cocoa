@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.github.jiusiz.core.adapter.MessageEventHandlerAdapter;
+import io.github.jiusiz.core.adapter.HandlerMethodAdapter;
 import io.github.jiusiz.core.handler.MessageHandlerMapping;
 import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
@@ -103,7 +103,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
      * @param event 事件
      */
     private void dispatch(Event event) {
-        Object handler = getHandler(event);
+        Object handler = getHandlerMapping(event);
         EventModel ev = null;
 
         // 如果没有处理器则会直接返回，无法处理本次事件
@@ -117,7 +117,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
             return;
         }
 
-        HandlerAdapter ha = getAdapter(handler);
+        HandlerAdapter ha = getHandlerAdapter(handler);
 
         if (ha == null) {
             logger.warn("未找到适配器处理此方法:" + handler.getClass());
@@ -137,7 +137,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
      * @param event 事件
      * @return 获得到的处理器
      */
-    private Object getHandler(Event event) {
+    private Object getHandlerMapping(Event event) {
         if (handlerMappings != null) {
             for (HandlerMapping handlerMapping : handlerMappings) {
                 Object handler = handlerMapping.getHandler(event);
@@ -149,7 +149,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
         return null;
     }
 
-    private HandlerAdapter getAdapter(Object handler) {
+    private HandlerAdapter getHandlerAdapter(Object handler) {
         if (handlerAdapters != null) {
             for (HandlerAdapter handlerAdapter : handlerAdapters) {
                 if (handlerAdapter.supports(handler)) {
@@ -178,7 +178,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
 
     private List<HandlerAdapter> getDefaultHandlerAdapters() {
         List<HandlerAdapter> defaultHandlerAdapters = new ArrayList<>();
-        defaultHandlerAdapters.add(registerBean(MessageEventHandlerAdapter.class));
+        defaultHandlerAdapters.add(registerBean(HandlerMethodAdapter.class));
         return defaultHandlerAdapters;
     }
 

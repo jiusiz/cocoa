@@ -17,39 +17,35 @@
 
 package io.github.jiusiz.core.adapter.resolver;
 
-import io.github.jiusiz.core.adapter.ArgumentResolver;
+import io.github.jiusiz.core.adapter.HandlerMethodArgumentResolver;
 import io.github.jiusiz.core.method.MethodParameter;
 import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.User;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.Event;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 
 /**
- * 消息事件参数解析器
+ * 消息主体参数解析器
  * @author jiusiz
- * @version 0.1.0
- * @since 0.1.0 2022-05-17 下午 6:57
+ * @version 0.2.0
+ * @since 0.2.0 2022-05-30 下午 7:26
  */
-@Deprecated
-public class MessageEventArgumentResolver implements ArgumentResolver {
-
+public class MessageSubjectArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
-    public boolean supportsArgument(MethodParameter parameter) {
-        return MessageEvent.class.isAssignableFrom(parameter.getEventClass());
+    public boolean supports(Event event, MethodParameter parameter) {
+        return (event instanceof MessageEvent) &&
+                Contact.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
-    public Object resolveArgument(Event event, MethodParameter parameter) {
-        MessageEvent ms = (MessageEvent) event;
-        if (MessageEvent.class.isAssignableFrom(parameter.getParameterType())){
-            return ms;
+    public Object resolverArgument(Event event, MethodParameter parameter) {
+        MessageEvent me = (MessageEvent) event;
+
+        if (event instanceof GroupMessageEvent && Group.class.isAssignableFrom(parameter.getParameterType())){
+            return ((GroupMessageEvent) event).getGroup();
         }
-        if (User.class.isAssignableFrom(parameter.getParameterType())){
-            return ms.getSender();
-        }
-        if (Contact.class.isAssignableFrom(parameter.getParameterType())){
-            return ms.getSubject();
-        }
-        return null;
+
+        return me.getSubject();
     }
 }

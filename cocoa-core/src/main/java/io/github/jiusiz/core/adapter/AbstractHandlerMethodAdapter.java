@@ -39,14 +39,14 @@ public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, In
     /**
      * 子类是否支持
      * @param handlerMethod 处理器方法
-     * @return 内部是否支持
+     * @return 是否支持
      */
     protected abstract boolean supportsInternal(HandlerMethod handlerMethod);
 
     @Override
-    public EventModel handle(Event event, Object handler) {
+    public EventModel handle(Event event, Object handler) throws Exception {
         return handleInternal(event, (HandlerMethod)handler);
     }
 
-    protected abstract EventModel handleInternal(Event event, HandlerMethod handler);
+    protected abstract EventModel handleInternal(Event event, HandlerMethod handler) throws Exception;
 }

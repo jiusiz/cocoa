@@ -41,5 +41,5 @@ public interface HandlerAdapter {
      * @param handler 处理器
      * @return 事件返回信息
      */
-    EventModel handle(Event event, Object handler);
+    EventModel handle(Event event, Object handler) throws Exception;
 }

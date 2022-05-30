@@ -15,34 +15,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core.adapter;
+package io.github.jiusiz.core.adapter.resolver;
 
+import io.github.jiusiz.core.adapter.HandlerMethodArgumentResolver;
 import io.github.jiusiz.core.method.MethodParameter;
 import net.mamoe.mirai.event.Event;
+import net.mamoe.mirai.event.events.MessageEvent;
+import net.mamoe.mirai.message.data.Message;
 
 /**
- * 参数解析器接口
- * 用于解析执行方法的参数，只负责一个参数
+ * 事件消息参数解析器
  * @author jiusiz
- * @version 0.1.0
- * @since 0.1.0 2022-05-17 下午 2:37
+ * @version 0.2.0
+ * @since 0.2.0 2022-05-30 下午 7:19
  */
-@Deprecated
-public interface ArgumentResolver {
+public class EventMessageArgumentResolver implements HandlerMethodArgumentResolver {
+    @Override
+    public boolean supports(Event event, MethodParameter parameter) {
+        return (event instanceof MessageEvent) &&
+                Message.class.isAssignableFrom(parameter.getParameterType());
+    }
 
-    /**
-     * 是否支持解析此参数
-     * @param parameter 参数
-     * @return 是否支持
-     */
-    boolean supportsArgument(MethodParameter parameter);
-
-    /**
-     * 解析参数
-     * @param event 事件
-     * @param parameter 原参数
-     * @return 解析到的参数
-     */
-    Object resolveArgument(Event event, MethodParameter parameter);
-
+    @Override
+    public Object resolverArgument(Event event, MethodParameter parameter) {
+        MessageEvent me = (MessageEvent) event;
+        return me.getMessage();
+    }
 }

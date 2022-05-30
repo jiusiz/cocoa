@@ -17,10 +17,14 @@
 
 package io.github.jiusiz.core.method;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Objects;
+
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.lang.Nullable;
 
 /**
  * @author jiusiz
@@ -29,24 +33,28 @@ import java.util.Objects;
  */
 public class MethodParameter {
 
-    private final Executable executable;
+    private final Executable method;
 
     private final Parameter parameter;
 
     private final int parameterIndex;
 
+    @Nullable
     private Class<?> eventClass;
 
     public MethodParameter(Method method, int parameterIndex, Parameter parameter) {
-        this.executable = method;
+        this.method = method;
         this.parameterIndex = parameterIndex;
         this.parameter = parameter;
     }
 
-    public void setEventClass(Class<?> eventClass) {
+    @Deprecated
+    public void setEventClass(@Nullable Class<?> eventClass) {
         this.eventClass = eventClass;
     }
 
+    @Nullable
+    @Deprecated
     public Class<?> getEventClass() {
         return eventClass;
     }
@@ -55,7 +63,13 @@ public class MethodParameter {
         return parameter.getType();
     }
 
+    public boolean hasMethodAnnotation(Class<? extends Annotation> annotationType) {
+        return AnnotatedElementUtils.hasAnnotation(method, annotationType);
+    }
 
+    public boolean hasParameterAnnotation(Class<? extends Annotation> annotationType) {
+        return AnnotatedElementUtils.hasAnnotation(parameter, annotationType);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -65,14 +79,14 @@ public class MethodParameter {
         MethodParameter that = (MethodParameter) o;
 
         if (parameterIndex != that.parameterIndex) return false;
-        if (!Objects.equals(executable, that.executable)) return false;
+        if (!Objects.equals(method, that.method)) return false;
         if (!Objects.equals(parameter, that.parameter)) return false;
         return Objects.equals(eventClass, that.eventClass);
     }
 
     @Override
     public int hashCode() {
-        int result = executable != null ? executable.hashCode() : 0;
+        int result = method != null ? method.hashCode() : 0;
         result = 31 * result + (parameter != null ? parameter.hashCode() : 0);
         result = 31 * result + parameterIndex;
         result = 31 * result + (eventClass != null ? eventClass.hashCode() : 0);
