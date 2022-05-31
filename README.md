@@ -14,6 +14,8 @@
 
 **本项目基于JDK11构建，请不要使用JDK11以下的JDK版本**
 
+**Spring Boot版本不建议低于2.6**
+
 ### 2.引入依赖
 
 maven
@@ -73,7 +75,55 @@ public class HelloController {
 
 🎉 恭喜你，已经成创建了一个QQ机器人
 
-### 6.进阶用法
+### 6.进阶示例
+
+1. 监听指定事件
+
+```java
+@EventController(机器人的QQ号)
+public class HelloController {
+    //                    发送人QQ号            发送人昵称            正则表达式
+    @FriendMessageMapping(sender = 123456789, senderName = "张三", content = "^你好.*")
+    public void f(FriendMessageEvent event) {
+        // 其他代码
+    }
+    //                   群号                发送人权限   ...... 剩余的和 @FriendMessageMapping 一致
+    @GroupMessageMapping(group = 987654321, permission = MemberPermission.ADMINISTRATOR)
+    public void g(){
+        // 其他代码
+    }
+}
+```
+
+上面的例子中`f`方法只会监听来自`123456789`且发送人昵称为`张三`且消息以`你好`开始的好友消息事件。
+
+上面的例子中`g`方法只会监听来自群`987654321`且发送人的权限为管理员的群消息事件。
+
+2. 联系人装配
+
+```java
+@EventController(机器人的QQ号)
+public class HelloController {
+    //           好友QQ号
+    @FriendWired(123456789)
+    private Friend friend;
+    //          群号
+    @GroupWired(987654321)
+    private Group group;
+
+    @Scheduled(cron = "0 0/1 * * * ? ") // 需要在Spring Boot主类加上`@EnableScheduling`
+    public void hello() {
+        friend.sendMessage("你好 " + LocalDateTime.now());
+        group.sendMessage("你好 " + LocalDateTime.now());
+    }
+}
+```
+
+上面的例子中，cocoa会在bot登录完成后，获取注解上标注的好友或群，注入到属性中。
+
+配合Spring Boot的定时任务，简单快捷即可实现定时发送信息。
+
+### 7.进阶文档
 
 [点击转到进阶用法文档](https://github.com/jiusiz/cocoa/blob/main/Advanced.md)
 

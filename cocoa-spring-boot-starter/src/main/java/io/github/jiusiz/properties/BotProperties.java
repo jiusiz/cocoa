@@ -29,10 +29,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "cocoa")
 public class BotProperties {
+    /**
+     * 机器人账号和密码
+     */
     private List<QQAccount> qq;
+
+    /**
+     * 设备信息路径
+     */
     private String device = null;
+
+    /**
+     * 缓存路径
+     */
     private String cache = null;
+
+    /**
+     * 是否自动重连
+     */
     private Boolean autoReconnection = false;
+
+    /**
+     * 是否启用联系人缓存
+     */
     private Boolean contactCache = false;
 
     public List<QQAccount> getQq() {

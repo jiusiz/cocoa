@@ -4,7 +4,7 @@
 
 ### 1.1 @EventController
 
-使用`@EventController`注解将类作为事件控制器，参与事件的响应。
+使用`@EventController`注解将类作为事件控制器，参与事件的响应以及联系人装配。
 
 `botId`属性是必须要填写的，表示`botId`机器人事件由这个控制器处理。
 
@@ -40,6 +40,7 @@ public class Xxx {
 不建议使用这种方式处理事件，尽量每一个方法只处理一个子类事件。
 
 #### 1.2.1 @MessageMapping
+
 现在可以使用`@MessageMapping`来处理消息事件
 
 你可以指定注解的属性值来改变处理的事件。
@@ -61,3 +62,26 @@ public class Xxx {
 `@FriendMessageMapping` 与 `@MessageMapping(event = FriendMessageEvent.class)` 等价。
 
 `@GroupMessageMapping` 与 `@MessageMapping(event = GroupMessageEvent.class)` 等价。
+
+### 1.3 @ContactWired
+
+`@ContactWired`注解需要与`@EventController`一起使用，`@ContactWired`会自动装配联系人对象，属性字段的类型可以为`Contact`、`Friend`、`Group`。
+
+`@ContactWired`会判断字段的类型，根据类型获取是好友QQ号还是群号，尽量不要直接使用这个注解，建议使用下面的合成注解。
+
+`@ContactWired`中有以下属性：
+
+- friend：`long`类型，需要装配的好友QQ号。
+- group：`long`类型，需要装配的群号。
+
+#### 1.3.1 @FriendWired
+
+`@FriendWired`是一个合成注解，它的原理是`@ContactWired(friend = 好友id)`。
+
+- value：`long`类型，需要装配的好友QQ号。
+
+#### 1.3.2 @GroupWired
+
+`@GroupWired`是一个合成注解，它的原理是`@ContactWired(group = 群号)`。
+
+- value：`long`类型，需要装配的群号。

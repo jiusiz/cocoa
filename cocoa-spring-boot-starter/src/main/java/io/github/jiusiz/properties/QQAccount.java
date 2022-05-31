@@ -23,7 +23,14 @@ package io.github.jiusiz.properties;
  * @since 2022-04-23 下午 9:39
  */
 public class QQAccount {
+    /**
+     * QQ账号
+     */
     private Long account;
+
+    /**
+     * 密码
+     */
     private String password;
 
     public Long getAccount() {
