@@ -15,32 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core;
+package io.github.jiusiz.core.handler;
 
-import io.github.jiusiz.core.model.EventModel;
+import io.github.jiusiz.core.HandlerMapping;
 import net.mamoe.mirai.event.Event;
+import net.mamoe.mirai.event.events.BotOnlineEvent;
 
 /**
- * 处理器适配器
  * @author jiusiz
  * @version 0.1.0
- * @since 2022-05-16 下午 8:14
+ * @since 0.1 2022-05-31 下午 3:40
  */
-public interface HandlerAdapter {
+public class BotOnlineHandlerMapping implements HandlerMapping {
+    @Override
+    public Object getHandler(Event event) {
+        return (event instanceof BotOnlineEvent ? new BotOnlineHandler() : null);
+    }
 
-    /**
-     * 是否支持执行此handler
-     * @param handler 处理器
-     * @return 是否支持
-     */
-    boolean supports(Object handler);
-
-    /**
-     * 执行处理器，并收集返回数据
-     * @param event 事件
-     * @param handler 处理器
-     * @return 事件返回信息
-     * @throws Exception 异常
-     */
-    EventModel handle(Event event, Object handler) throws Exception;
+    public static class BotOnlineHandler {}
 }

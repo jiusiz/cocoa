@@ -30,7 +30,10 @@ import net.mamoe.mirai.Bot;
  * @since 2022-04-19 下午 10:44
  */
 public abstract class AbstractBotContainer implements BotContainer {
+
     private static final ConcurrentHashMap<Long, Bot> bots = new ConcurrentHashMap<>();
+
+    private List<Bot> botsCache;
 
     @Override
     public Bot getBot(Long id) {
@@ -39,9 +42,12 @@ public abstract class AbstractBotContainer implements BotContainer {
 
     @Override
     public List<Bot> getBots() {
-        ArrayList<Bot> botList = new ArrayList<>();
-        bots.forEach((k, v) -> botList.add(v));
-        return botList;
+        if (botsCache == null || botsCache.size() != bots.values().size()) {
+            ArrayList<Bot> botList = new ArrayList<>();
+            bots.forEach((k, v) -> botList.add(v));
+            botsCache = botList;
+        }
+        return botsCache;
     }
 
     public static void addBot(Bot bot) {

@@ -15,32 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core;
+package io.github.jiusiz.core.annotation.wired;
 
-import io.github.jiusiz.core.model.EventModel;
-import net.mamoe.mirai.event.Event;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.core.annotation.AliasFor;
 
 /**
- * 处理器适配器
  * @author jiusiz
  * @version 0.1.0
- * @since 2022-05-16 下午 8:14
+ * @since 0.1.0 2022-05-30 下午 8:24
  */
-public interface HandlerAdapter {
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@ContactWired
+public @interface GroupWired {
 
-    /**
-     * 是否支持执行此handler
-     * @param handler 处理器
-     * @return 是否支持
-     */
-    boolean supports(Object handler);
+    @AliasFor(value = "group", annotation = ContactWired.class)
+    long value() default 0;
 
-    /**
-     * 执行处理器，并收集返回数据
-     * @param event 事件
-     * @param handler 处理器
-     * @return 事件返回信息
-     * @throws Exception 异常
-     */
-    EventModel handle(Event event, Object handler) throws Exception;
 }

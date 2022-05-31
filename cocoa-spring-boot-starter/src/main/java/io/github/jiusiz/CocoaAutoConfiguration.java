@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import io.github.jiusiz.core.BotContainer;
+import io.github.jiusiz.core.ContactAssembler;
 import io.github.jiusiz.core.EventDispatcher;
 import io.github.jiusiz.core.context.SingleBotContainer;
 import io.github.jiusiz.factory.SimpleBotFactory;
@@ -71,6 +72,13 @@ public class CocoaAutoConfiguration {
     @ConditionalOnBean(BotContainer.class)
     public EventDispatcher eventDispatcher() {
         return new EventDispatcher();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(BotContainer.class)
+    public ContactAssembler contactAssembler() {
+        return new ContactAssembler();
     }
 
     @Bean(QQ_LOGIN_THREAD_POOL_EXECUTOR)

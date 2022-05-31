@@ -25,9 +25,15 @@ package io.github.jiusiz.core.model;
  */
 public class EventModel {
 
+    private boolean empty;
+
     private Object primitiveValue;
 
     private Class<?> eventClass;
+
+    public EventModel() {
+        this.empty = true;
+    }
 
     public EventModel(Object primitiveValue) {
         this.primitiveValue = primitiveValue;

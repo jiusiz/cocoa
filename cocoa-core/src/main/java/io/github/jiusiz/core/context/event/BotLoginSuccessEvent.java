@@ -15,32 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.jiusiz.core;
+package io.github.jiusiz.core.context.event;
 
-import io.github.jiusiz.core.model.EventModel;
-import net.mamoe.mirai.event.Event;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ApplicationContextEvent;
 
 /**
- * 处理器适配器
+ * 机器人登录成功之后的事件
  * @author jiusiz
- * @version 0.1.0
- * @since 2022-05-16 下午 8:14
+ * @version 0.2.0
+ * @since 0.2.0 2022-05-30 下午 8:12
  */
-public interface HandlerAdapter {
-
-    /**
-     * 是否支持执行此handler
-     * @param handler 处理器
-     * @return 是否支持
-     */
-    boolean supports(Object handler);
-
-    /**
-     * 执行处理器，并收集返回数据
-     * @param event 事件
-     * @param handler 处理器
-     * @return 事件返回信息
-     * @throws Exception 异常
-     */
-    EventModel handle(Event event, Object handler) throws Exception;
+public class BotLoginSuccessEvent extends ApplicationContextEvent {
+    public BotLoginSuccessEvent(ApplicationContext source) {
+        super(source);
+    }
 }
