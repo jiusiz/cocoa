@@ -28,6 +28,7 @@ import io.github.jiusiz.properties.BotProperties;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.utils.BotConfiguration;
+import net.mamoe.mirai.utils.LoggerAdapters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -125,6 +126,12 @@ public abstract class SimpleBotFactory {
             } else {
                 enableContactCache();
             }
+            // 配置登录协议
+            setProtocol(botProperties.getProtocol());
+            // 配置心跳策略
+            setHeartbeatStrategy(botProperties.getHeartbeatStrategy());
+            // 设置日志代理
+            setBotLoggerSupplier((bot) -> LoggerAdapters.asMiraiLogger(logger));
         }});
         return bot;
     }

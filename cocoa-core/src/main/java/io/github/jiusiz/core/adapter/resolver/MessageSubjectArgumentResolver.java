@@ -39,7 +39,7 @@ public class MessageSubjectArgumentResolver implements HandlerMethodArgumentReso
     }
 
     @Override
-    public Object resolverArgument(Event event, MethodParameter parameter) {
+    public Contact resolverArgument(Event event, MethodParameter parameter) {
         MessageEvent me = (MessageEvent) event;
 
         if (event instanceof GroupMessageEvent && Group.class.isAssignableFrom(parameter.getParameterType())){

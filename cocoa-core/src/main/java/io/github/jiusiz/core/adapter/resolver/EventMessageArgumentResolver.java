@@ -37,7 +37,7 @@ public class EventMessageArgumentResolver implements HandlerMethodArgumentResolv
     }
 
     @Override
-    public Object resolverArgument(Event event, MethodParameter parameter) {
+    public Message resolverArgument(Event event, MethodParameter parameter) {
         MessageEvent me = (MessageEvent) event;
         return me.getMessage();
     }

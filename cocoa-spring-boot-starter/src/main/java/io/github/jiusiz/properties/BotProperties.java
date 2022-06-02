@@ -19,6 +19,7 @@ package io.github.jiusiz.properties;
 
 import java.util.List;
 
+import net.mamoe.mirai.utils.BotConfiguration;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -54,17 +55,23 @@ public class BotProperties {
      */
     private Boolean contactCache = false;
 
+    /**
+     * 心跳策略
+     */
+    private BotConfiguration.HeartbeatStrategy heartbeatStrategy = BotConfiguration.HeartbeatStrategy.STAT_HB;
+
+    /**
+     * 登录协议
+     */
+    private BotConfiguration.MiraiProtocol protocol = BotConfiguration.MiraiProtocol.ANDROID_PHONE;
+
     public List<QQAccount> getQq() {
         verify();
         return qq;
     }
 
-    public Boolean getContactCache() {
-        return contactCache;
-    }
-
-    public void setContactCache(Boolean contactCache) {
-        this.contactCache = contactCache;
+    public void setQq(List<QQAccount> qq) {
+        this.qq = qq;
     }
 
     public String getDevice() {
@@ -91,8 +98,28 @@ public class BotProperties {
         this.autoReconnection = autoReconnection;
     }
 
-    public void setQq(List<QQAccount> qq) {
-        this.qq = qq;
+    public Boolean getContactCache() {
+        return contactCache;
+    }
+
+    public void setContactCache(Boolean contactCache) {
+        this.contactCache = contactCache;
+    }
+
+    public BotConfiguration.HeartbeatStrategy getHeartbeatStrategy() {
+        return heartbeatStrategy;
+    }
+
+    public void setHeartbeatStrategy(BotConfiguration.HeartbeatStrategy heartbeatStrategy) {
+        this.heartbeatStrategy = heartbeatStrategy;
+    }
+
+    public BotConfiguration.MiraiProtocol getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(BotConfiguration.MiraiProtocol protocol) {
+        this.protocol = protocol;
     }
 
     public void verify() {
