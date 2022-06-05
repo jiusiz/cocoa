@@ -21,6 +21,8 @@ import io.github.jiusiz.core.HandlerAdapter;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -29,6 +31,8 @@ import org.springframework.beans.factory.InitializingBean;
  * @since 2022-05-16 下午 9:04
  */
 public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, InitializingBean {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean supports(Object handler) {
@@ -45,7 +49,7 @@ public abstract class AbstractHandlerMethodAdapter implements HandlerAdapter, In
 
     @Override
     public EventModel handle(Event event, Object handler) throws Exception {
-        return handleInternal(event, (HandlerMethod)handler);
+        return handleInternal(event, (HandlerMethod) handler);
     }
 
     protected abstract EventModel handleInternal(Event event, HandlerMethod handler) throws Exception;

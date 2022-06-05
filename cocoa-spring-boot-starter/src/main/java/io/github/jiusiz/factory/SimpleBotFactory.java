@@ -41,7 +41,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class SimpleBotFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleBotFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger("cocoa.log");
 
     public static Bot createBot(Long qq, String password) {
         return BotFactory.INSTANCE.newBot(qq, password);

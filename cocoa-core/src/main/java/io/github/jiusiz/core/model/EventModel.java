@@ -25,21 +25,46 @@ package io.github.jiusiz.core.model;
  */
 public class EventModel {
 
+    private boolean handled;
+
     private boolean empty;
 
+    @Deprecated
     private Object primitiveValue;
 
     private Class<?> eventClass;
 
+    private String description;
+
     public EventModel() {
         this.empty = true;
+        this.handled = false;
     }
 
+    @Deprecated
     public EventModel(Object primitiveValue) {
+        this.empty = false;
         this.primitiveValue = primitiveValue;
     }
 
     public void setEventClass(Class<?> eventClass) {
+        this.empty = false;
         this.eventClass = eventClass;
+    }
+
+    public boolean isHandled() {
+        return handled;
+    }
+
+    public void setHandled(boolean handled) {
+        this.handled = handled;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -21,14 +21,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import io.github.jiusiz.core.adapter.handler.ReplyMessageReturnValueHandler;
 import io.github.jiusiz.core.adapter.resolver.EventArgumentResolver;
 import io.github.jiusiz.core.adapter.resolver.EventMessageArgumentResolver;
 import io.github.jiusiz.core.adapter.resolver.MessageSubjectArgumentResolver;
 import io.github.jiusiz.core.method.HandlerMethod;
 import io.github.jiusiz.core.method.MethodParameter;
+import io.github.jiusiz.core.method.ReturnType;
 import io.github.jiusiz.core.model.EventModel;
 import net.mamoe.mirai.event.Event;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * @author jiusiz
@@ -39,12 +44,14 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
 
     private List<HandlerMethodArgumentResolver> argumentResolvers;
 
-    private Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache;
+    private List<HandlerMethodReturnValueHandler> returnValueHandlers;
 
+    private final Map<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() {
         initArgumentResolvers();
+        initReturnValueHandlers();
     }
 
     /**
@@ -54,10 +61,21 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
         // TODO: 2022-5-29 自定义参数解析器
         List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
         if (resolvers.isEmpty()) {
-            // TODO: 2022-5-30 制定异常
-            throw new RuntimeException();
+            logger.warn("获取默认参数解析器失败，这可能是一个内部错误。");
         }
         this.argumentResolvers = resolvers;
+    }
+
+    /**
+     * 初始化返回值处理器
+     */
+    private void initReturnValueHandlers() {
+        // TODO: 2022年6月2日 自定义返回值处理器
+        List<HandlerMethodReturnValueHandler> returnValueHandlers = getDefaultHandlerMethodReturnValueHandlers();
+        if (returnValueHandlers.isEmpty()) {
+            logger.warn("获取默认返回值处理器失败，这可能是一个内部错误。");
+        }
+        this.returnValueHandlers = returnValueHandlers;
     }
 
     /**
@@ -65,12 +83,22 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
      * @return 参数解析器列表
      */
     private List<HandlerMethodArgumentResolver> getDefaultArgumentResolvers() {
-        ArrayList<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
+        List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
         resolvers.add(new EventArgumentResolver());
         resolvers.add(new EventMessageArgumentResolver());
 
         resolvers.add(new MessageSubjectArgumentResolver());
         return resolvers;
+    }
+
+    /**
+     * 创建默认的返回值处理器
+     * @return 返回值处理器列表
+     */
+    private List<HandlerMethodReturnValueHandler> getDefaultHandlerMethodReturnValueHandlers() {
+        List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
+        returnValueHandlers.add(new ReplyMessageReturnValueHandler());
+        return returnValueHandlers;
     }
 
     @Override
@@ -82,11 +110,19 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
     protected EventModel handleInternal(Event event, HandlerMethod handler) throws Exception {
         Object[] args = resolverArgument(event, handler);
         Object returnValue = invokeMethod(handler, args);
-        // TODO: 2022-5-29 返回值处理器
-        return new EventModel(returnValue);
+        return handleReturnValue(returnValue, event, handler.getReturnType());
     }
 
+    /**
+     * 解析参数
+     * @param event 当前事件
+     * @param handler 处理器
+     * @return 参数
+     */
     private Object[] resolverArgument(Event event, HandlerMethod handler) {
+        if (handler.getParameterCount() == 0) {
+            return null;
+        }
         Object[] args = new Object[handler.getParameterCount()];
         MethodParameter[] parameters = handler.getParameters();
 
@@ -102,10 +138,23 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
         return args;
     }
 
+    @Nullable
+    private EventModel handleReturnValue(Object returnValue, Event event, ReturnType returnType) {
+        HandlerMethodReturnValueHandler returnValueHandler = getReturnValueHandler(returnType, event);
+        if (returnValueHandler != null) {
+            EventModel eventModel = new EventModel();
+            // 设置已处理
+            eventModel.setHandled(true);
+            return returnValueHandler.handleReturnValue(eventModel, returnValue, returnType, event);
+        }
+        return new EventModel();
+    }
+
     private HandlerMethodArgumentResolver getArgumentResolverFromCache(MethodParameter parameter) {
         return argumentResolverCache.get(parameter);
     }
 
+    @NonNull
     private HandlerMethodArgumentResolver getArgumentResolver(Event event, MethodParameter parameter) {
         if (argumentResolvers != null) {
             for (HandlerMethodArgumentResolver argumentResolver : argumentResolvers) {
@@ -118,6 +167,18 @@ public class HandlerMethodAdapter extends AbstractHandlerMethodAdapter {
         }
         // TODO: 2022-5-30 制定异常
         throw new RuntimeException();
+    }
+
+    private HandlerMethodReturnValueHandler getReturnValueHandler(ReturnType returnType, Event event) {
+        if (returnValueHandlers != null) {
+            for (HandlerMethodReturnValueHandler returnValueHandler : returnValueHandlers) {
+                if (returnValueHandler.supportsReturnType(returnType, event)) {
+                    return returnValueHandler;
+                }
+            }
+        }
+        logger.warn("未找到返回值处理器，将忽略本次方法的返回值。");
+        return null;
     }
 
     private Object invokeMethod(HandlerMethod handler, Object[] args) throws InvocationTargetException, IllegalAccessException {

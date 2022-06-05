@@ -37,6 +37,8 @@ public class HandlerMethod {
 
     private final MethodParameter[] parameters;
 
+    private final ReturnType returnType;
+
     public HandlerMethod(Object bean, Method method) {
         Assert.notNull(bean, "Bean is required");
         Assert.notNull(method, "Method is required");
@@ -46,6 +48,7 @@ public class HandlerMethod {
         this.beanType = bean.getClass();
         // this.beanType = ClassUtils.getUserClass(bean);
         this.parameters = initParameters();
+        this.returnType = initReturnType();
     }
 
     private MethodParameter[] initParameters() {
@@ -57,6 +60,10 @@ public class HandlerMethod {
             methodParameters[i] = new MethodParameter(method, i, ps[i]);
         }
         return methodParameters;
+    }
+
+    private ReturnType initReturnType() {
+        return new ReturnType(method, method.getReturnType());
     }
 
     public Method getMethod() {
@@ -80,6 +87,10 @@ public class HandlerMethod {
             throw new RuntimeException("获取参数时超过索引上界");
         }
         return parameters[index];
+    }
+
+    public ReturnType getReturnType() {
+        return this.returnType;
     }
 
     public int getParameterCount() {
