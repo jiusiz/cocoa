@@ -21,12 +21,15 @@ import io.github.jiusiz.core.adapter.HandlerMethodArgumentResolver;
 import io.github.jiusiz.core.method.MethodParameter;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.event.Event;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 
 /**
  * 消息主体参数解析器
+ * <p>支持解析联系人-群{@link net.mamoe.mirai.contact.Group}/好友{@link net.mamoe.mirai.contact.Friend}/陌生人{@link net.mamoe.mirai.contact.Stranger}，
+ * 群员-发送者{@link net.mamoe.mirai.contact.Member}
  * @author jiusiz
  * @version 0.2.0
  * @since 0.2.0 2022-05-30 下午 7:26
@@ -42,8 +45,12 @@ public class MessageSubjectArgumentResolver implements HandlerMethodArgumentReso
     public Contact resolverArgument(Event event, MethodParameter parameter) {
         MessageEvent me = (MessageEvent) event;
 
-        if (event instanceof GroupMessageEvent && Group.class.isAssignableFrom(parameter.getParameterType())){
+        if (event instanceof GroupMessageEvent && Group.class.isAssignableFrom(parameter.getParameterType())) {
             return ((GroupMessageEvent) event).getGroup();
+        }
+
+        if (event instanceof GroupMessageEvent && Member.class.isAssignableFrom(parameter.getParameterType())) {
+            return ((GroupMessageEvent) event).getSender();
         }
 
         return me.getSubject();

@@ -1,5 +1,6 @@
 plugins {
     java
+    `java-library`
     signing
     `maven-publish`
     kotlin("jvm") version "1.6.10"
@@ -59,7 +60,7 @@ val nePassword: String by project
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("-cocoa-") {
             groupId = "${project.group}"
             artifactId = project.name
             this.version = "${project.version}"
@@ -91,7 +92,7 @@ publishing {
         }
         repositories {
             maven {
-                name = "sonatype"
+                name = "-sonatype-"
                 url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
                 credentials {
                     username = neName
@@ -99,7 +100,7 @@ publishing {
                 }
             }
             maven {
-                name = "sonatypeSnapshot"
+                name = "-sonatypeSnapshot-"
                 url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 credentials {
                     username = neName

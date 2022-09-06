@@ -23,6 +23,7 @@ import java.util.Map;
 
 import io.github.jiusiz.core.adapter.BotOnlineHandlerAdapter;
 import io.github.jiusiz.core.adapter.HandlerMethodAdapter;
+import io.github.jiusiz.core.handler.BasicHandlerMapping;
 import io.github.jiusiz.core.handler.BotOnlineHandlerMapping;
 import io.github.jiusiz.core.handler.MessageHandlerMapping;
 import io.github.jiusiz.core.model.EventModel;
@@ -176,6 +177,7 @@ public class EventDispatcher extends AbstractEventDispatcher {
         List<HandlerMapping> defaultHandlerMappings = new ArrayList<>();
         defaultHandlerMappings.add(registerBean(BotOnlineHandlerMapping.class));
         defaultHandlerMappings.add(registerBean(MessageHandlerMapping.class));
+        defaultHandlerMappings.add(registerBean(BasicHandlerMapping.class));
         return defaultHandlerMappings;
     }
 
