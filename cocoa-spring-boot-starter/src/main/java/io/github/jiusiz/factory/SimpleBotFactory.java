@@ -47,7 +47,23 @@ public abstract class SimpleBotFactory {
         return BotFactory.INSTANCE.newBot(qq, password);
     }
 
+    public static Bot createBotMd5(Long qq, String password, BotProperties botProperties) {
+        return createBot(qq, password, true, botProperties);
+    }
+
     public static Bot createBot(Long qq, String password, BotProperties botProperties) {
+       return createBot(qq, password, false, botProperties);
+    }
+
+    /**
+     * 使用账号、密码、配置创建一个Bot实例
+     * @param qq QQ号
+     * @param password 明文密码或MD5密码
+     * @param useMd5 是否使用MD5密码
+     * @param botProperties 配置文件
+     * @return Bot实例
+     */
+    public static Bot createBot(Long qq, String password, Boolean useMd5, BotProperties botProperties) {
         String specificDeviceJson = null;
         boolean useRandomDevice = true;
         boolean specificDevice = false;
@@ -102,7 +118,7 @@ public abstract class SimpleBotFactory {
         final boolean finalSpecificDevice = specificDevice;
         final String finalSpecificDeviceJson = specificDeviceJson;
         final String finalCanonicalPath = canonicalPath;
-        bot = BotFactory.INSTANCE.newBot(qq, password, new BotConfiguration() {{
+        BotConfiguration botConfiguration = new BotConfiguration() {{
             // 配置登录设备信息
             if (finalUseRandomDevice) {
                 fileBasedDeviceInfo();
@@ -132,7 +148,14 @@ public abstract class SimpleBotFactory {
             setHeartbeatStrategy(botProperties.getHeartbeatStrategy());
             // 设置日志代理
             setBotLoggerSupplier((bot) -> LoggerAdapters.asMiraiLogger(logger));
-        }});
+        }};
+        if (useMd5) {
+            // 使用明文账号和密码登录
+            bot = BotFactory.INSTANCE.newBot(qq, password, botConfiguration);
+        } else {
+            // 使用MD5密码登录
+            bot = BotFactory.INSTANCE.newBot(qq, password.getBytes(), botConfiguration);
+        }
         return bot;
     }
 

@@ -26,6 +26,7 @@ import io.github.jiusiz.core.BotContainer;
 import io.github.jiusiz.core.ContactAssembler;
 import io.github.jiusiz.core.EventDispatcher;
 import io.github.jiusiz.core.context.SingleBotContainer;
+import io.github.jiusiz.exception.BotCreateException;
 import io.github.jiusiz.factory.SimpleBotFactory;
 import io.github.jiusiz.properties.BotProperties;
 import io.github.jiusiz.properties.QQAccount;
@@ -36,6 +37,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 /**
  * @author jiusiz
@@ -61,7 +63,15 @@ public class CocoaAutoConfiguration {
         SingleBotContainer singleBotContainer = new SingleBotContainer();
 
         for (QQAccount qq : botProperties.getQq()) {
-            Bot bot = SimpleBotFactory.createBot(qq.getAccount(), qq.getPassword(), botProperties);
+            Bot bot;
+            System.out.println(qq);
+            if (StringUtils.hasText(qq.getPwdMd5()) && !StringUtils.hasText(qq.getPassword())) {
+                bot = SimpleBotFactory.createBotMd5(qq.getAccount(), qq.getPwdMd5(), botProperties);
+            } else if (!StringUtils.hasText(qq.getPwdMd5()) && StringUtils.hasText(qq.getPassword())) {
+                bot = SimpleBotFactory.createBot(qq.getAccount(), qq.getPassword(), botProperties);
+            } else {
+                throw new BotCreateException("密码配置错误！");
+            }
             SingleBotContainer.addBot(bot);
         }
         return singleBotContainer;

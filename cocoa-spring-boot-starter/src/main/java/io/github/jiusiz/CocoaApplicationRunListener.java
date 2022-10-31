@@ -51,6 +51,7 @@ public class CocoaApplicationRunListener implements SpringApplicationRunListener
 
         List<Bot> bots = container.getBots();
 
+        // 使用线程池启动每一个机器人
         for (Bot bot : bots) {
             bot.getEventChannel().subscribeAlways(Event.class, dispatcher::doService);
             executor.execute(bot::login);

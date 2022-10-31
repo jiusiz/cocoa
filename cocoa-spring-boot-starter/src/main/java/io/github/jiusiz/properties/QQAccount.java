@@ -33,8 +33,21 @@ public class QQAccount {
      */
     private String password;
 
+    /**
+     * 经过MD5编码后的密码，能防止密码明文泄露
+     */
+    private String pwdMd5;
+
     public Long getAccount() {
         return account;
+    }
+
+    public String getPwdMd5() {
+        return pwdMd5;
+    }
+
+    public void setPwdMd5(String pwdMd5) {
+        this.pwdMd5 = pwdMd5;
     }
 
     public void setAccount(Long account) {
@@ -47,5 +60,14 @@ public class QQAccount {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "QQAccount{" +
+                "account=" + account +
+                ", password='" + password + '\'' +
+                ", pwdMd5='" + pwdMd5 + '\'' +
+                '}';
     }
 }
