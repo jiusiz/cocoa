@@ -23,6 +23,7 @@ import net.mamoe.mirai.event.Event;
 
 /**
  * 原始事件解析器
+ * <p>
  * 如果参数为当前事件的父类，这返回原始事件
  * @author jiusiz
  * @version 0.2.0

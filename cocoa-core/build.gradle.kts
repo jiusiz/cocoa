@@ -6,14 +6,14 @@ plugins {
     kotlin("jvm") version "1.6.10"
     kotlin("plugin.spring") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
-    id("org.springframework.boot") version "2.6.7"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot") version "2.7.15"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
-    api("net.mamoe:mirai-core:2.11.0")
+    api("net.mamoe:mirai-core:2.15.0")
     api("com.google.code.findbugs:annotations:3.0.1") // 消除警告
 
     implementation(kotlin("stdlib"))
@@ -80,7 +80,7 @@ publishing {
                     developer {
                         id.set("jiusiz")
                         name.set("jiusiz")
-                        email.set("jiusiz@outlook.com")
+                        email.set("jiusiz@qq.com")
                     }
                 }
                 scm {
